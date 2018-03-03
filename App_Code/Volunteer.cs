@@ -376,33 +376,6 @@ public class Volunteer
         }
     }
 
-    //public string DisplayName { get => displayName; set => displayName = value; }
-    //public string FirstNameH { get => firstNameH; set => firstNameH = value; }
-    //public string FirstNameA { get => firstNameA; set => firstNameA = value; }
-    //public string LastNameH { get => lastNameH; set => lastNameH = value; }
-    //public string LastNameA { get => lastNameA; set => lastNameA = value; }
-    //public string CellPhone { get => cellPhone; set => cellPhone = value; }
-    //public string CellPhone2 { get => cellPhone2; set => cellPhone2 = value; }
-    //public string HomePhone { get => homePhone; set => homePhone = value; }
-    //public string City { get => city; set => city = value; }
-    //public string Address { get => address; set => address = value; }
-    //public string Gender { get => gender; set => gender = value; }
-    //public string TypeVol { get => typeVol; set => typeVol = value; }
-    //public string Email { get => email; set => email = value; }
-    //public string Birthdate { get => birthdate; set => birthdate = value; }
-    //public string PreferRoute1 { get => preferRoute1; set => preferRoute1 = value; }
-    //public string PreferRoute2 { get => preferRoute2; set => preferRoute2 = value; }
-    //public string PreferRoute3 { get => preferRoute3; set => preferRoute3 = value; }
-    //public string Day1 { get => day1; set => day1 = value; }
-    //public string Day2 { get => day2; set => day2 = value; }
-    //public string Day3 { get => day3; set => day3 = value; }
-    //public string Hour1 { get => hour1; set => hour1 = value; }
-    //public string Hour2 { get => hour2; set => hour2 = value; }
-    //public string Hour3 { get => hour3; set => hour3 = value; }
-    //public string JoinDate { get => joinDate; set => joinDate = value; }
-    //public string Status { get => status; set => status = value; }
-    //public string KnowArabic { get => knowArabic; set => knowArabic = value; }
-
     public Volunteer()
     {
         //
@@ -494,36 +467,6 @@ public class Volunteer
     }
 
 
-    //public DataTable read()
-    //{
-    //    DBservices dbs = new DBservices();
-    //    dbs = dbs.ReadFromDataBase("RoadDBconnectionString", "Volunteer");
-    //    return dbs.dt;
-    //}
-
-    //public List<Volunteer> getList()
-    //{
-    //    DBservices dbs = new DBservices();
-    //    List<Volunteer> listV = new List<Volunteer>();
-    //    listV = dbs.getList("RoadDBconnectionString", "Volunteer");
-    //    return listV;
-    //}
-    
-    //    public List<Volunteer> getrespList(string resp)
-    //{
-    //    DBservices dbs = new DBservices();
-    //    List<Volunteer> listV = new List<Volunteer>();
-    //    listV = dbs.getrespList("RoadDBconnectionString", "Volunteer", resp);
-    //    return listV;
-    //}
-
-    //public Volunteer geUser(string phoneNumber)
-    //{
-    //    DBservices dbs = new DBservices();
-    //    Volunteer v= new Volunteer();
-    //    v = dbs.getUser("RoadDBconnectionString", "Volunteer", phoneNumber);
-    //    return v;
-    //}
 
     public List<Volunteer> getVolunteersList(bool active)
     {
@@ -569,9 +512,7 @@ public class Volunteer
             v.KnowArabic = dr["knowArabic"].ToString();
             v.Birthdate = dr["birthdate"].ToString();
             v.Gender = dr["gender"].ToString();
-            //Volunteer v = new Volunteer(displayName, firstNameA, firstNameH, lastNameH, lastNameA, cellPhone, cellPhone2, homePhone, city, street, email, birthdate,
-            //    joinDate, statusVolunteer, gender, knowArabic, preferRoute1, preferRoute2, preferRoute3, preferDay1, preferDay2, preferDay3,
-            //    preferHour1, preferHour2, preferHour3, typeVol);
+           
 
             list.Add(v);
         }

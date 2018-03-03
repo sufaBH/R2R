@@ -98,14 +98,14 @@
                     $('#datatable-buttons tbody').on('click', '#edit', function () {
                         var data = t.row($(this).parents('tr')).data();
                         arr_details = { displayName: data[0], func: "edit" };
-                        GENERAL.VOLUNTEERS.setVolunteersList(JSON.stringify(arr_details));
+                        GENERAL.PATIENTS.setPatientsList(JSON.stringify(arr_details));
                         location.href = "patientForm.html";
                     });
 
                     $('#datatable-buttons tbody').on('click', '#show', function () {
                         var data = t.row($(this).parents('tr')).data();
                         arr_details = { displayName: data[0], func: "show" };
-                        GENERAL.VOLUNTEERS.setVolunteersList(JSON.stringify(arr_details));
+                        GENERAL.PATIENTS.setPatientsList(JSON.stringify(arr_details));
                         location.href = "patientForm.html";
                     });
 

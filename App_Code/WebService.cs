@@ -37,6 +37,24 @@ public class WebService : System.Web.Services.WebService
     }
 
     [WebMethod]
+    public string getPatientEscorted(string displayName)
+    {
+        JavaScriptSerializer j = new JavaScriptSerializer();
+        Patient c = new Patient();
+        List<Escorted> escortedsList = c.getescortedsList(displayName);
+        return j.Serialize(escortedsList);
+    }
+
+    [WebMethod]
+    public void deactivateEscorted(string displayName, string active)
+    {
+        Escorted c = new Escorted();
+        c.DisplayName = displayName;
+        c.deactivateEscorted(active);
+    }
+
+
+    [WebMethod]
     public void deactivatePatient(string displayName, string active)
     {
         Patient c = new Patient();
@@ -52,7 +70,25 @@ public class WebService : System.Web.Services.WebService
         p.setPatient(func);
 
     }
+    
+    [WebMethod]
+    public void setEscorted(Escorted escorted, string func)
+    {
+        Escorted p = new Escorted();
+        p = escorted;
+        p.setEscorted(func);
 
+    }
+
+    [WebMethod]
+    public string getEscorted(string displayName)
+    {
+        JavaScriptSerializer j = new JavaScriptSerializer();
+        Escorted p = new Escorted();
+        p.DisplayName = displayName;
+        Escorted escorted = p.getEscorted();
+        return j.Serialize(escorted);
+    }
     [WebMethod]
     public string getPatient(string displayName)
     {

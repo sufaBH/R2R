@@ -42,6 +42,14 @@
             localStorage.volunteersList = volunteersList;
         }
     },
+    ESCORTED: {
+        getEscortedList: function () {
+            return localStorage.escortedList;
+        },
+        setEscortedList: function (escortedList) {
+            localStorage.escortedList = escortedList;
+        }
+    },
 
     PATIENTS: {
         getPatientsList: function () {

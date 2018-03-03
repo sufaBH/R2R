@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
 
@@ -17,9 +18,9 @@ public class Escorted
     string lastNameH;// שם משפחה עברית
     string lastNameA;//שם משפחה ערבית
     string addrees;//כתובת
-    int cellPhone;//טלפון נייד
-    int cellPhone2;//טלפון 
-    int homePhone;//טלפון בית
+    string cellPhone;//טלפון נייד
+    string cellPhone2;//טלפון 
+    string homePhone;//טלפון בית
     string status;//סטטוס
     string contactType;//קרבה לחולה
     string gender;
@@ -115,7 +116,7 @@ public class Escorted
         }
     }
 
-    public int CellPhone
+    public string CellPhone
     {
         get
         {
@@ -128,7 +129,7 @@ public class Escorted
         }
     }
 
-    public int CellPhone2
+    public string CellPhone2
     {
         get
         {
@@ -141,7 +142,7 @@ public class Escorted
         }
     }
 
-    public int HomePhone
+    public string HomePhone
     {
         get
         {
@@ -193,8 +194,26 @@ public class Escorted
         }
     }
 
+    public Escorted(Patient _pat,string _displayName, string _firstNameH, string _firstNameA, string _lastNameH, string _lastNameA,
+     string _addrees, string _cellPhone, string _cellPhone2, string _homePhone, string _status, string _contactType, string _gender)
+    {
+        Pat = _pat;
+        DisplayName = _displayName;
+        FirstNameA = _firstNameA;
+        FirstNameH = _firstNameH;
+        LastNameA = _lastNameA;
+        LastNameH = _lastNameH;
+        Addrees = _addrees;
+        CellPhone = _cellPhone;
+        CellPhone2 = _cellPhone2;
+        HomePhone = _homePhone;
+        Status = _status;
+        ContactType = _contactType;
+        Gender = _gender;
+    }
+
     public Escorted(Patient _pat, string _firstNameH, string _firstNameA, string _lastNameH, string _lastNameA,
-        string _addrees, int _cellPhone, int _cellPhone2, int _homePhone, string _status, string _contactType, string _gender)
+        string _addrees, string _cellPhone, string _cellPhone2, string _homePhone, string _status, string _contactType, string _gender)
     {
         Pat = _pat;
         FirstNameA = _firstNameA;
@@ -210,7 +229,7 @@ public class Escorted
         Gender = _gender;
     }
          public Escorted(string _displayName, string _firstNameH, string _firstNameA, string _lastNameH, string _lastNameA,
-         int _cellPhone, int _cellPhone2, int _homePhone, string _addrees, string _status, string _contactType, string _gender)
+         string _cellPhone, string _cellPhone2, string _homePhone, string _addrees, string _status, string _contactType, string _gender)
     {
 
         DisplayName = _displayName;
@@ -233,7 +252,7 @@ public class Escorted
         //
     }
 
-    public Escorted(string _displayname,string _firstNameH,string _lastNameH,int _cellPhone)
+    public Escorted(string _displayname,string _firstNameH,string _lastNameH,string _cellPhone)
     {
         DisplayName = _displayname;
         FirstNameH = _firstNameH;
@@ -245,7 +264,66 @@ public class Escorted
     {
         DisplayName = _displayname;
     }
- 
+
+    public void deactivateEscorted(string active)
+    {
+        DbService db = new DbService();
+        db.ExecuteQuery("UPDATE Escorted SET statusEscorted='" + active + "' WHERE displayName='" + DisplayName + "'");
+    }
+
+
+    public Escorted getEscorted()
+    {
+        #region DB functions
+        string query = "select patient,displayName, firstNameH,firstNameA, lastNameH,lastNameA, cellPhone,cellPhone2,homePhone,city,statusEscorted, contactType,gender from Escorted where displayName ='" + displayName + "'";
+        Escorted p = new Escorted();
+        DbService db = new DbService();
+        DataSet ds = db.GetDataSetByQuery(query);
+
+        foreach (DataRow dr in ds.Tables[0].Rows)
+        {
+            p.Pat = new Patient(dr["patient"].ToString());
+            p.DisplayName = dr["displayName"].ToString();
+            p.FirstNameA = dr["firstNameA"].ToString();
+            p.FirstNameH = dr["firstNameH"].ToString();
+            p.LastNameH = dr["lastNameH"].ToString();
+            p.LastNameA = dr["lastNameA"].ToString();
+            p.CellPhone = dr["cellPhone"].ToString();
+            p.CellPhone2 = dr["cellPhone2"].ToString();
+            p.HomePhone = dr["homePhone"].ToString();
+            p.Addrees = dr["city"].ToString();
+            p.Status = dr["statusEscorted"].ToString();
+            p.ContactType = dr["contactType"].ToString();
+            p.Gender = dr["gender"].ToString();
+
+        }
+        #endregion
+
+        return p;
+    }
+
+    public void setEscorted(string func)
+    {
+        DbService db = new DbService();
+        string query = "";
+        if (func == "edit")
+        {
+            query = "UPDATE Escorted SET patient = '" + Pat.DisplayName + "',displayName = '" + DisplayName + "', firstNameH = '" + FirstNameH + "', firstNameA = '" + FirstNameA + "', lastNameH = '" + LastNameH + "', lastNameA = '" + LastNameA + "', cellPhone = '" + CellPhone + "', cellPhone2 = " + CellPhone2 +
+            ", homePhone = '" + HomePhone + "', city = '" + Addrees + "', statusEscorted = '" + Status + "', contactType = '" + ContactType + "', gender = '" + Gender + "' WHERE displayName = '" + DisplayName + "'";
+        }
+        else if (func == "new")
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendFormat("Values('{0}', '{1}', '{2}','{3}','{4}','{5}','{6}','{7}','{8}','{9}','{10}', '{11}', '{12}')",
+                Pat.DisplayName,DisplayName, FirstNameH, FirstNameA, LastNameH, LastNameA,
+                CellPhone, CellPhone2, HomePhone, Addrees, Status,
+                ContactType, Gender);
+            String prefix = "INSERT INTO Escorted " + "(patient,displayName, firstNameH,firstNameA, lastNameH,lastNameA, cellPhone,cellPhone2,homePhone,city,statusEscorted, contactType,gender)";
+            query = prefix + sb.ToString();
+            //query = "insert into Customers values ('" + CustomerName + "','" + CustomerContactName + "','" + AccountID + "','Y','" + Phone1 + "','" + Phone2 + "','" + Email + "'," + PaymentType.PaymentTypeID + ",'" + Comments + "'," + PreferedDrivers.DriverID + ", '" + RegistrationNumber + "', '" + BillingAddress + "')";
+        }
+        db.ExecuteQuery(query);
+    }
 
     //public DataTable read()
     //{
@@ -254,7 +332,7 @@ public class Escorted
     //    return dbs.dt;
     //}
 
-    
+
     //    public List<Escorted> getListEscorted(string displayNamePat)
     //{
     //    DBservices dbs = new DBservices();
