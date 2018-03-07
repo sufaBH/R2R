@@ -28,6 +28,7 @@ public class RidePat
     Volunteer coordinator; //רכז אחראי
     string remark;//הערות
     string status;
+    string area;
 
     public RidePat()
     {
@@ -308,6 +309,8 @@ public class RidePat
         }
     }
 
+    public string Area { get; set; }
+
 
     //public DataTable read()
     //{
@@ -315,4 +318,47 @@ public class RidePat
     //    dbs = dbs.ReadFromDataBase("RoadDBconnectionString", "RidePat");
     //    return dbs.dt;
     //}
+
+    public List<RidePat> GetRidePat()
+    {
+        DbService db = new DbService();
+        DataTable dt = db.getRidePat();
+        List<RidePat> rpl = new List<RidePat>();
+        foreach (DataRow row in dt.Rows)
+        {
+            RidePat rp = new RidePat();
+            rp.RidePatNum = int.Parse(row.ItemArray[0].ToString());
+            Patient pat = new Patient();
+            pat.DisplayName = row.ItemArray[1].ToString();
+            rp.Pat = pat;
+            rp.StartArea = row.ItemArray[2].ToString();
+            rp.FinishArea = row.ItemArray[3].ToString();
+            string d = row.ItemArray[5].ToString();
+            rp.Date = d.Substring(0, d.LastIndexOf(":"));
+            rp.LeavingHour = row.ItemArray[6].ToString();
+            rp.Addition = row.ItemArray[8].ToString();
+            rp.Area = row.ItemArray[16].ToString();
+
+            if (row.ItemArray[13] != null)
+            {
+                Escorted e = new Escorted();
+                e.DisplayName = row.ItemArray[13].ToString();
+                rp.escorted1 = e;
+            }
+            if (row.ItemArray[14] != null)
+            {
+                Escorted e = new Escorted();
+                e.DisplayName = row.ItemArray[14].ToString();
+                rp.escorted2 = e;
+            }
+            if (row.ItemArray[15] != null)
+            {
+                Escorted e = new Escorted();
+                e.DisplayName = row.ItemArray[15].ToString();
+                rp.escorted3 = e;
+            }
+            rpl.Add(rp);
+        }
+        return rpl;
+    }
 }

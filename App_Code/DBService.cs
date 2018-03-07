@@ -42,7 +42,7 @@ public class DbService
         {
             adp.Fill(ds);
         }
-        catch (Exception e)
+        catch (Exception )
         {
             //do something with the error
             ds = null;
@@ -77,7 +77,7 @@ public class DbService
                 row_affected = cmd.ExecuteNonQuery();
                 tran.Commit();
             }
-            catch (Exception e)
+            catch (Exception )
             {
                 tran.Rollback();
             }
@@ -115,6 +115,21 @@ public class DbService
         return res;
     }
 
-
-
+    public DataTable getRidePat()
+    {
+        string cmdStr = "select * from RidePat";
+        DataSet ds = new DataSet();
+        try
+        {
+            adp = new SqlDataAdapter(cmdStr, con);
+            
+            adp.Fill(ds, "RidePat");
+            
+        }
+        catch (Exception e)
+        {
+            e.Message.ToString();
+        }
+        return ds.Tables["RidePAt"];
+    }
 }
