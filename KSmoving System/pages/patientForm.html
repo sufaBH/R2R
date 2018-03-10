@@ -10,7 +10,7 @@
 
     <link rel="shortcut icon" href="assets/images/favicon_1.ico">
 
-    <title>מלווה</title>
+    <title>חולה</title>
 
     <link href="../plugins/switchery/switchery.min.css" rel="stylesheet" />
     <link href="assets/css/bootstrap-rtl.min.css" rel="stylesheet" type="text/css">
@@ -220,6 +220,42 @@
                 error: function (err) { alert("Error"); }
             });
         }
+
+        function generateStatus(patient) {
+            var $select = $("#statusPatient");
+            if (patient.Status != "") {
+                $('<option>', { value: patient.Status, text: patient.Status }).appendTo($select);
+            }
+            $('<option>', { value: "", text: "בחר " }).appendTo($select);
+
+            $('<option>', { value: "פעיל", text: "פעיל " }).appendTo($select);
+            $('<option>', { value: "לא פעיל", text: "לא פעיל " }).appendTo($select);
+        }
+
+        function generateStatus1() {
+            var $select = $("#statusPatient");
+            $('<option>', { value: "", text: "בחר " }).appendTo($select);
+            $('<option>', { value: "פעיל", text: "פעיל " }).appendTo($select);
+            $('<option>', { value: "לא פעיל", text: "לא פעיל " }).appendTo($select);
+        }
+
+        function generateGender(patient) {
+            var $select = $("#gender");
+            if (patient.Gender != "") {
+                $('<option>', { value: patient.Gender, text: patient.Gender }).appendTo($select);
+            }
+            $('<option>', { value: "", text: "בחר " }).appendTo($select);
+            $('<option>', { value: "זכר", text: "זכר " }).appendTo($select);
+            $('<option>', { value: "נקבה", text: "נקבה " }).appendTo($select);
+        }
+
+        function generateGender1() {
+            var $select = $("#gender");
+            $('<option>', { value: "", text: "בחר " }).appendTo($select);
+            $('<option>', { value: "זכר", text: "זכר " }).appendTo($select);
+            $('<option>', { value: "נקבה", text: "נקבה " }).appendTo($select);
+        }
+
         function initializeSelect2() {
             //    arrSelectors = ['paymentType', 'preferRoute'];
             //    for (var i in arrSelectors) {
@@ -230,10 +266,22 @@
         function loadPage() {
             if (JSON.parse(GENERAL.PATIENTS.getPatientsList()).length != 0) {
                 arr_patient = JSON.parse(GENERAL.PATIENTS.getPatientsList());
-                if (arr_patient.func == "edit" || arr_patient.func == "show") {
-                    uploadData(arr_patient.displayName);
-
+                if (arr_patient.func == "edit" || arr_patient.func == "show")
+                {
+                    document.getElementById("escorted").style.visibility = "visible";
+                    if (arr_patient.func == "edit") {
+                        uploadData(arr_patient.displayName);
+                    }
                     if (arr_patient.func == "show") {
+                        uploadData1(arr_patient.displayName);
+                        //document.getElementById("escorted").disabled = true;
+                        document.getElementById("edit").disabled = true;
+                        document.getElementById("remove").disabled = true;
+                        document.getElementById("reactive").disabled = true;
+                        document.getElementById("show").disabled = true;
+                        document.getElementById("createCustomer").disabled = true;
+                        document.getElementById("datatable-buttons").disabled = true;
+
 
                         $("#PatientName").attr('disabled', 'disabled');
                         $("#patientFirstName").attr('disabled', 'disabled');
@@ -259,8 +307,11 @@
                 }
                 else {
                     generateBarrier();
-                    generateHospital()
+                    generateHospital();
+                    generateStatus1();
+                    generateGender1();
                     initializeSelect2();
+                    document.getElementById("escorted").style.visibility = "hidden";
                     $("#activepatient").prop('checked', 'checked');
                 }
             }
@@ -279,6 +330,8 @@
                     GENERAL.PATIENTS.setPatientsList(patient);
                     generateHospitalPat(patient);
                     generateBarrierPat(patient);
+                    generateStatus(patient);
+                    generateGender(patient);
                     $("#PatientName").val(patient.DisplayName);
                     $("#patientFirstName").val(patient.FirstNameH);
                     $("#patientLastName").val(patient.LastNameH);
@@ -299,6 +352,46 @@
                     $("#gender").val(patient.Gender);
                     $("#birthDate").val(patient.Birthdate);
                     refreshTable(patient.DisplayName)
+
+                },
+                error: function (err) { alert("Error"); }
+            });
+        }
+
+        function uploadData1(displayName) {
+            $.ajax({
+                dataType: "json",
+                url: "WebService.asmx/getPatient",
+                contentType: "application/json; charset=utf-8",
+                type: "POST",
+                data: JSON.stringify({ displayName: displayName }),
+                success: function (data) {
+                    var patient = JSON.parse(data.d);
+                    GENERAL.PATIENTS.setPatientsList(patient);
+                    generateHospitalPat(patient);
+                    generateBarrierPat(patient);
+                    generateStatus(patient);
+                    generateGender(patient);
+                    $("#PatientName").val(patient.DisplayName);
+                    $("#patientFirstName").val(patient.FirstNameH);
+                    $("#patientLastName").val(patient.LastNameH);
+                    $("#firstA").val(patient.FirstNameA);
+                    $("#lastA").val(patient.LastNameA);
+                    $("#phone1").val(patient.CellPhone);
+                    $("#phone2").val(patient.CellPhone1);
+                    $("#HomePhone").val(patient.HomePhone);
+                    $("#city").val(patient.City);
+                    $("#livingArea").val(patient.LivingArea);
+                    $("#statusPatient").val(patient.Status);
+                    $("#selectAddition").val(patient.Addition);
+                    $("#history").val(patient.History);
+                    $("#department").val(patient.Department);
+                    $("#selectBarrier").val(patient.Barrier);
+                    $("#selectHospital").val(patient.Hospital);
+                    $("#remarks").val(patient.Remarks);
+                    $("#gender").val(patient.Gender);
+                    $("#birthDate").val(patient.Birthdate);
+                    refreshTable1(patient.DisplayName)
 
                 },
                 error: function (err) { alert("Error"); }
@@ -377,7 +470,7 @@
                         swal({
                             title: "אתה בטוח שברצונך למחוק את המלווה:",
                             type: "warning",
-                            text: data[1],
+                            text: data[0],
                             showCancelButton: true,
                             cancelButtonText: "בטל",
                             confirmButtonClass: 'btn-warning',
@@ -400,7 +493,7 @@
                         swal({
                             title: "אתה בטוח שברצונך לשחזר את המלווה:",
                             type: "warning",
-                            text: data[1],
+                            text: data[0],
                             showCancelButton: true,
                             cancelButtonText: "בטל",
                             confirmButtonClass: 'btn-warning',
@@ -418,6 +511,33 @@
                         });
 
                     });
+                },
+                error: function (err) { alert("Error"); }
+            });
+        }
+
+        function refreshTable1(displayName) {
+            checkCookie();
+            // var active = $("#activePatient").prop('checked');
+
+            t.clear().draw();
+
+            $.ajax({
+                dataType: "json",
+                url: "WebService.asmx/getPatientEscorted",
+                contentType: "application/json; charset=utf-8",
+                type: "POST",
+                data: JSON.stringify({ displayName: displayName }),
+                success: function (data) {
+                    var arr_patients = JSON.parse(data.d);
+                    //GENERAL.VOLUNTEERS.setvolunteersList(arr_volunteers);
+
+                    for (i in arr_patients) {
+                        t.row.add([arr_patients[i].DisplayName, arr_patients[i].CellPhone, arr_patients[i].City, arr_patients[i].ContactType, arr_patients[i].Gender,""]).draw(false);
+
+                    }
+
+                    t.columns([1]).order('asc').draw();
                 },
                 error: function (err) { alert("Error"); }
             });
@@ -516,7 +636,7 @@
                             </a>
                         </li>
 
-                        <li class="has_sub">
+                        <!--<li class="has_sub">
                             <a href="javascript:void(0);" class="waves-effect waves-primary">
                                 <i class="md md-wallet-travel"></i> <span> ניהול הזמנות </span>
                                 <span class="menu-arrow"></span>
@@ -527,21 +647,21 @@
                                 <li><a href="viewInvoices.html">חשבוניות</a></li>
                                 <li><a href="viewServices.html">מחירונים</a></li>
                             </ul>
-                        </li>
+                        </li>-->
 
                         <li>
-                            <a href="shiftOrganizer.html" class="waves-effect waves-primary">
-                                <i class="md md-today"></i><span> סידור עבודה</span>
+                            <a href="viewVolunteer.html" class="waves-effect waves-primary">
+                                <i class="md md-today"></i><span> ניהול מתנדבים</span>
                             </a>
                         </li>
 
                         <li>
-                            <a href="viewCustomers.html" class="waves-effect waves-primary">
-                                <i class="md md-recent-actors"></i><span> ניהול לקוחות</span>
+                            <a href="viewPatient.html" class="waves-effect waves-primary">
+                                <i class="md md-recent-actors"></i><span> ניהול חולים</span>
                             </a>
                         </li>
 
-                        <li class="has_sub">
+                        <!--<li class="has_sub">
                             <a href="javascript:void(0);" class="waves-effect waves-primary">
                                 <i class="md md-local-shipping"></i> <span> ניהול משאיות </span>
                                 <span class="menu-arrow"></span>
@@ -550,9 +670,9 @@
                                 <li><a href="viewTrucks.html">משאיות</a></li>
                                 <li><a href="viewHandlings.html">טיפולים</a></li>
                             </ul>
-                        </li>
+                        </li>-->
 
-                        <li class="has_sub">
+                        <!--<li class="has_sub">
                             <a href="javascript:void(0);" class="waves-effect waves-primary">
                                 <i class="md md-person"></i> <span> ניהול הנהגים </span>
                                 <span class="menu-arrow"></span>
@@ -561,14 +681,14 @@
                                 <li><a href="viewDrivers.html">נהגים</a></li>
                                 <li><a href="viewDriverConstrains.html">זמינות הנהגים</a></li>
                             </ul>
-                        </li>
+                        </li>-->
 
 
-                        <li>
+                        <!--<li>
                             <a href="viewReports.html" class="waves-effect waves-primary">
                                 <i class="md md-poll"></i><span> דוחות</span>
                             </a>
-                        </li>
+                        </li>-->
 
 
                     </ul>
@@ -592,10 +712,10 @@
                         <div class="col-sm-12">
                             <div class="page-title-box">
                                 <ol class="breadcrumb pull-right">
-                                    <li><a href="viewpatient.html">ניהול מתנדבים</a></li>
-                                    <li class="active">מתנדב</li>
+                                    <li><a href="viewpatient.html">ניהול חולים</a></li>
+                                    <li class="active">חולה</li>
                                 </ol>
-                                <h4 class="page-title">מתנדב&nbsp&nbsp<i class="md md-recent-actors"></i></h4>
+                                <h4 class="page-title">חולה&nbsp&nbsp<i class="md md-recent-actors"></i></h4>
                             </div>
                         </div>
                     </div>
@@ -604,7 +724,7 @@
                             <div class="col-sm-12">
                                 <div class="card-box">
                                     <div class="row">
-                                        <h4 class="m-t-0 header-title"><b>טופס מתנדב</b></h4>
+                                        <h4 class="m-t-0 header-title"><b>טופס חולה</b></h4>
                                         <p class="text-muted font-13 m-b-30">
                                             יצירת, צפייה ועריכת חולה. לחץ על כפתור חזור בכדי לצפות בכל החולים.
                                         </p>
@@ -686,8 +806,8 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">מין</label>
-                                                <div class="col-sm-6">
-                                                    <input id="gender" name="gender" type="text" class="form-control">
+                                                <div class="col-sm-6" id="selectgender">
+                                                    <select id="gender" name="gender" class="form-control"></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -733,18 +853,24 @@
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">כלי עזר</label>
                                                 <!--<div class="col-sm-6" id="selectAddition">
-                                                    <select id="PreferedDrivers3" name="PreferedDrivers3" class="form-control"></select>
-                                                </div>-->
+                                <select id="PreferedDrivers3" name="PreferedDrivers3" class="form-control"></select>
+                            </div>-->
                                                 <div class="col-sm-6">
                                                     <input id="selectAddition" name="selectAddition" type="text" class="form-control">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-sm-6">
+                                            <!--<div class="form-group">
+                            <label class="col-sm-3 control-label">סטטוס</label>
+                            <div class="col-sm-6">
+                                <input id="statusPatient" name="statusPatient" type="text" class="form-control">
+                            </div>
+                        </div>-->
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">סטטוס</label>
-                                                <div class="col-sm-6">
-                                                    <input id="statusPatient" name="statusPatient" type="text" class="form-control">
+                                                <div class="col-sm-6" id="selectstatusPatient">
+                                                    <select id="statusPatient" name="statusPatient" class="form-control"></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -784,62 +910,87 @@
                                             <div class="col-md-6 checkbox checkbox-primary text-left">
                                                 <input id="activepatient" type="checkbox" disabled>
                                                 <label for="activepatient">
-                                                    מתנדב פעיל
+                                                    חולה פעיל
                                                 </label>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-sm-8">
-                                        <h4 class="m-t-0 header-title"><b>טבלת מלווים</b></h4>
-                                        <p class="text-muted font-13 m-b-30">
-                                            מבט כללי על המלווים שבוצעו, ניתן לצפות בפרטים נוספים בלחיצה על כפתור ההרחבה.
-                                        </p>
-                                    </div>
-                                    <div class="col-sm-4 text-right">
-                                        <button type='button' class='btn btn-icon waves-effect waves-light btn-success btn-sm m-b-5' id='show' title='פרטים נוספים'><i class='fa fa-wpforms'></i></button> צפייה
-                                        <button type='button' class='btn btn-icon waves-effect waves-light btn-primary btn-sm m-b-5' id='edit' title='ערוך'><i class='ti-pencil'></i></button> ערוך
-                                        <button type='button' class='btn btn-icon waves-effect waves-light btn-danger btn-sm m-b-5' id='remove' title='מחק'><i class='fa fa-remove'></i></button> מחק
-                                        <button type='button' class='btn btn-icon waves-effect waves-light btn-warning btn-sm m-b-5' id='reactive' title='שחזר'><i class='fa fa-undo'></i></button> שחזר
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <!--<div class="col-sm-3 checkbox checkbox-primary text-left">
-                                        <input id="activeCustomers" type="checkbox" onchange="refreshTable()" checked>
-                                        <label for="activeCustomers">
-                                            מלווים פעילים בלבד
-                                        </label>
-                                    </div>-->
+                                <div class="row" id="escorted">
+                                    <div class="col-sm-12">
+                                        <div class="card-box table-responsive">
 
-                                    <div class="col-sm-9 text-right ">
-                                        <button type="button" id="createCustomer" onclick="newEscortedForm()" class="btn btn-success waves-effect w-md waves-light m-b-5"><span class="glyphicon glyphicon-plus-sign m-r-5"></span>חדש</button>
-                                    </div>
-                                </div>
-                                <table id="datatable-buttons" class="table table-striped table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>שם</th>
-                                            <th>טלפון</th>
-                                            <th>יישוב</th>
-                                            <th>סוג קרבה</th>
-                                            <th>מין</th>
-                                            <th>ערוך מלווה</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody></tbody>
-                                </table>
-                                <div id="addressesForm">
-                                    <hr />
-                                    <table id="jqGrid" class="table table-striped table-bordered text-right"></table>
-                                    <div id="jqGridPager"></div>
-                                    <div class="text-right m-t-30 row">
-                                        <button type="submit" id="saveCustomer" class="btn btn-success waves-effect w-md waves-light m-b-5  m-r-15"><i class="ti-save m-r-5"></i>שמור</button>
+                                            <div class="row">
+                                                <div class="col-sm-8">
+                                                    <h4 class="m-t-0 header-title"><b>טבלת מלווים</b></h4>
+                                                    <p class="text-muted font-13 m-b-30">
+                                                        מבט כללי על המלווים של החולה, ניתן לצפות בפרטים נוספים בלחיצה על כפתור ההרחבה.
+                                                    </p>
+                                                </div>
+                                                <div class="col-sm-4 text-right">
+                                                    <button type='button' class='btn btn-icon waves-effect waves-light btn-success btn-sm m-b-5' id='show' title='פרטים נוספים'><i class='fa fa-wpforms'></i></button> צפייה
+                                                    <button type='button' class='btn btn-icon waves-effect waves-light btn-primary btn-sm m-b-5' id='edit' title='ערוך'><i class='ti-pencil'></i></button> ערוך
+                                                    <button type='button' class='btn btn-icon waves-effect waves-light btn-danger btn-sm m-b-5' id='remove' title='מחק'><i class='fa fa-remove'></i></button> מחק
+                                                    <button type='button' class='btn btn-icon waves-effect waves-light btn-warning btn-sm m-b-5' id='reactive' title='שחזר'><i class='fa fa-undo'></i></button> שחזר
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <!--<div class="col-sm-3 checkbox checkbox-primary text-left">
+                                <input id="activeCustomers" type="checkbox" onchange="refreshTable()" checked>
+                                <label for="activeCustomers">
+                                    מלווים פעילים בלבד
+                                </label>
+                            </div>-->
+
+                                                <!--<div class="col-sm-9 text-right ">
+                                                    <button type="button" id="createCustomer" onclick="newEscortedForm()" class="btn btn-success waves-effect w-md waves-light m-b-5"><span class="glyphicon glyphicon-plus-sign m-r-5"></span>חדש</button>
+                                                </div>
+                                            </div>
+                                            <table id="datatable-buttons" class="table table-striped table-bordered">
+                                                <thead>
+                                                    <tr>
+                                                        <th>שם</th>
+                                                        <th>טלפון</th>
+                                                        <th>יישוב</th>
+                                                        <th>סוג קרבה</th>
+                                                        <th>מין</th>
+                                                        <th>ערוך מלווה</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody></-->tbody>
+                                            <!--</table>-->
+
+                                            <div class="col-sm-9 text-right ">
+                                                <button type="button" id="createCustomer" onclick="newEscortedForm()" class="btn btn-success waves-effect w-md waves-light m-b-5"><span class="glyphicon glyphicon-plus-sign m-r-5"></span>חדש</button>
+                                            </div>
+                                        </div>
+                                        <table id="datatable-buttons" class="table table-striped table-bordered">
+                                            <thead>
+                                                <tr>
+                                                    <th>שם</th>
+                                                    <th>טלפון</th>
+                                                    <th>יישוב</th>
+                                                    <th>סוג קרבה</th>
+                                                    <th>מין</th>
+                                                    <th>ערוך מלווה</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody></tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
-                           
-                        </form>
+                            <!--<div id="addressesForm">
+                                <hr />
+                                <table id="jqGrid" class="table table-striped table-bordered text-right"></table>
+                                <div id="jqGridPager"></div>
+                                <div class="text-right m-t-30 row">
+                                    <button type="submit" id="saveCustomer" class="btn btn-success waves-effect w-md waves-light m-b-5  m-r-15"><i class="ti-save m-r-5"></i>שמור</button>
+                                </div>
+                            </div>-->
+</div>
+
+</form>
                     </div>
                 </div>
                 <!-- end container -->
@@ -879,25 +1030,25 @@
 
                 // Rules for form validation
                 rules: {
-                    volunteerName: {
+                    PatientName: {
                         required: true
                     },
-                    volunteerFirstName: {
+                    patientFirstName: {
                         required: true
                     },
-                    volunteerLastName: {
+                    patientLastName: {
                         required: true
                     },
                     phone1: {
                         required: true
                     },
-                    email: {
-                        required: true,
-                        email: true
-                    },
-                    typeVolunteer: {
-                        required: true
-                    }
+                    //email: {
+                    //    required: true,
+                    //    email: true
+                    //},
+                    //typeVolunteer: {
+                    //    required: true
+                    //}
                 },
 
                 submitHandler: function (form, event) {
@@ -909,7 +1060,7 @@
                     var phone = $("#phone1").val();
                     var city = $("#city").val();
                     var barrier = $("#barrier").val();
-                    var status = $("#statusPatient").val();
+                    var status = $("#selectstatusPatient").val();
                     var gender = $("#gender").val();
                     var birthDate = $("#birthDate").val();
                     var phone1 = $("#phone2").val();
@@ -1000,33 +1151,34 @@
 
                 // Messages for form validation
                 messages: {
-                    customerName: {
-                        required: "אנא הכנס שם לקוח"
+                    PatientName: {
+                        required: "אנא הכנס שם תצוגת חולה"
                     },
-                    customerContactName: {
-                        required: "אנא הכנס איש קשר"
+                    patientFirstName: {
+                        required: "אנא הכנס שם פרטי"
+                    },
+                    patientLastName: {
+                        required: "אנא הכנס שם משפחה"
                     },
                     phone1: {
                     },
-                    phone2: {
-                    },
-                    email: {
-                        required: "אנא הכנס כתובת Email ",
-                        email: "אנא הכנס כתובת תקינה"
-                    },
-                    accountID: {
-                        required: "אנא הכנס מספר חשבון"
-                    },
-                    registrationNumber: {
-                        required: "אנא הכנס מספר עסק"
-                    },
-                    paymentType: {
-                        required: "אנא בחר סוג תשלום"
-                    },
-                    preferedDrivers: {
-                    },
-                    comments: {
-                    }
+                    //email: {
+                    //    required: "אנא הכנס כתובת Email ",
+                    //    email: "אנא הכנס כתובת תקינה"
+                    //},
+                    //accountID: {
+                    //    required: "אנא הכנס מספר חשבון"
+                    //},
+                    //registrationNumber: {
+                    //    required: "אנא הכנס מספר עסק"
+                    //},
+                    //paymentType: {
+                    //    required: "אנא בחר סוג תשלום"
+                    //},
+                    //preferedDrivers: {
+                    //},
+                    //comments: {
+                    //}
                 },
 
 
@@ -1062,122 +1214,122 @@
             addRowCount = 0;
             numberOfRecords = 0;
 
-            $("#jqGrid").jqGrid({
-                ajaxSelectOptions: {
-                    type: "POST",
-                    contentType: 'application/json; charset=utf-8',
-                    datatype: "json",
-                    data: JSON.stringify({}),
-                },
-                datatype: "local",
-                editurl: 'clientArray',
-                viewrecords: true,
-                colModel: [
-                    {
-                        label: 'ID',
-                        name: 'ID',
-                        width: "5%",
-                    },
-                    {
-                        label: 'ID',
-                        name: 'ID',
-                        width: "10%"
-                    },
-                    //{
-                    //    label: 'עיר',
-                    //    name: 'City',
-                    //    width: "10%",
-                    //    editable: true,
-                    //    edittype: "select",
-                    //    editoptions: {
-                    //        dataUrl: "WebService.asmx/getCities",
-                    //        buildSelect: function (data) {
-                    //            var retValue = $.parseJSON(data);
-                    //            var arr_cities = $.parseJSON(retValue.d);
-                    //            var select = "<select>";
-                    //            select += "<option value='-1' selected='' disabled=''>בחר</option>";
+        //    $("#jqGrid").jqGrid({
+        //        ajaxSelectOptions: {
+        //            type: "POST",
+        //            contentType: 'application/json; charset=utf-8',
+        //            datatype: "json",
+        //            data: JSON.stringify({}),
+        //        },
+        //        datatype: "local",
+        //        editurl: 'clientArray',
+        //        viewrecords: true,
+        //        colModel: [
+        //            {
+        //                label: 'ID',
+        //                name: 'ID',
+        //                width: "5%",
+        //            },
+        //            {
+        //                label: 'ID',
+        //                name: 'ID',
+        //                width: "10%"
+        //            },
+        //            //{
+        //            //    label: 'עיר',
+        //            //    name: 'City',
+        //            //    width: "10%",
+        //            //    editable: true,
+        //            //    edittype: "select",
+        //            //    editoptions: {
+        //            //        dataUrl: "WebService.asmx/getCities",
+        //            //        buildSelect: function (data) {
+        //            //            var retValue = $.parseJSON(data);
+        //            //            var arr_cities = $.parseJSON(retValue.d);
+        //            //            var select = "<select>";
+        //            //            select += "<option value='-1' selected='' disabled=''>בחר</option>";
 
-                    //            if (arr_cities && arr_cities.length) {
-                    //                for (i in arr_cities) {
-                    //                    select += "<option value='" + arr_cities[i].CityID + "'>" + arr_cities[i].CityName + "</option>";
-                    //                }
-                    //            }
-                    //            select += "</select>";
-                    //            return select;
-                    //        }
+        //            //            if (arr_cities && arr_cities.length) {
+        //            //                for (i in arr_cities) {
+        //            //                    select += "<option value='" + arr_cities[i].CityID + "'>" + arr_cities[i].CityName + "</option>";
+        //            //                }
+        //            //            }
+        //            //            select += "</select>";
+        //            //            return select;
+        //            //        }
 
-                    //    },
-                    //    editrules: { custom: true, custom_func: checkCity }
+        //            //    },
+        //            //    editrules: { custom: true, custom_func: checkCity }
 
-                    //},
-                    {
-                        label: 'יעד סיום',
-                        name: 'Street',
-                        width: "20%",
-                        editable: true,
-                        editrules: { required: true }
-                    },
-                    {
-                        label: 'יום',
-                        name: 'Number',
-                        width: "10%",
-                        editable: true,
-                        editrules: { required: true }
-                    },
-                    {
-                        label: 'שעה',
-                        name: 'ContactPerson',
-                        width: "10%",
-                        editable: true
-                    },
-                    {
-                        label: 'כיוון',
-                        name: 'ContactPhone',
-                        width: "10%",
-                        editable: true
-                    },
-                    //{
-                    //    label: 'הערות',
-                    //    name: 'Comments',
-                    //    width: "15%",
-                    //    editable: true
-                    //}
-                ],
+        //            //},
+        //            {
+        //                label: 'יעד סיום',
+        //                name: 'Street',
+        //                width: "20%",
+        //                editable: true,
+        //                editrules: { required: true }
+        //            },
+        //            {
+        //                label: 'יום',
+        //                name: 'Number',
+        //                width: "10%",
+        //                editable: true,
+        //                editrules: { required: true }
+        //            },
+        //            {
+        //                label: 'שעה',
+        //                name: 'ContactPerson',
+        //                width: "10%",
+        //                editable: true
+        //            },
+        //            {
+        //                label: 'כיוון',
+        //                name: 'ContactPhone',
+        //                width: "10%",
+        //                editable: true
+        //            },
+        //            //{
+        //            //    label: 'הערות',
+        //            //    name: 'Comments',
+        //            //    width: "15%",
+        //            //    editable: true
+        //            //}
+        //        ],
 
-                sortname: 'City',
-                loadonce: true,
-                autowidth: true,
-                height: "100%",
-                rowNum: 150,
-                direction: "rtl",
-                pager: "#jqGridPager",
+        //        sortname: 'City',
+        //        loadonce: true,
+        //        autowidth: true,
+        //        height: "100%",
+        //        rowNum: 150,
+        //        direction: "rtl",
+        //        pager: "#jqGridPager",
 
-            });
+        //    });
 
             if (JSON.parse(GENERAL.PATIENTS.getPatientsList()).length != 0) {
                 arr_customer = JSON.parse(GENERAL.PATIENTS.getPatientsList());
                 if (arr_customer.func != "show") {
 
-                    $('#jqGrid').navGrid("#jqGridPager", { edit: false, add: false, del: true, refresh: false, view: false, position: "left", cloneToTop: true });
-                    $('#jqGrid').inlineNav('#jqGridPager',
-                        // the buttons to appear on the toolbar of the grid
-                        {
-                            edit: true,
-                            add: true,
-                            del: true,
-                            cancel: false,
-                            addParams: {
-                                addRowParams: {
-                                    oneditfunc: function () { addRowCount += 1; }
-                                }
+        //            $('#jqGrid').navGrid("#jqGridPager", { edit: false, add: false, del: true, refresh: false, view: false, position: "left", cloneToTop: true });
+        //            $('#jqGrid').inlineNav('#jqGridPager',
+        //                // the buttons to appear on the toolbar of the grid
+        //                {
+        //                    edit: true,
+        //                    add: true,
+        //                    del: true,
+        //                    cancel: false,
+        //                    addParams: {
+        //                        addRowParams: {
+        //                            oneditfunc: function () { addRowCount += 1; }
+        //                        }
 
-                            }
-                        });
+        //                    }
+        //                });
                 }
             }
 
 
-            loadPage();
+           loadPage();
         });
 </script>
     
