@@ -146,9 +146,10 @@
 
         function generateStatus(escorted) {
             var $select = $("#status");
-            if (escorted.Status != "") {
+            if (escorted.Status != "")
+            {
                 $('<option>', { value: escorted.Status, text: escorted.Status }).appendTo($select);
-                    }
+             }
                     $('<option>', { value: "", text: "בחר " }).appendTo($select);
 
                     $('<option>', { value: "פעיל", text: "פעיל " }).appendTo($select);
@@ -199,7 +200,7 @@
                         $("#contactType").attr('disabled', 'disabled');
                         $("#city").attr('disabled', 'disabled');
                         $("#gender").attr('disabled', 'disabled');
-                        $("#statusEscorted").attr('disabled', 'disabled');
+                        $("#status").attr('disabled', 'disabled');
                         $("#phone2").attr('disabled', 'disabled');
                         $("#HomePhone").attr('disabled', 'disabled');
                         $("#firstA").attr('disabled', 'disabled');
@@ -559,22 +560,22 @@
                                     <div class="row m-l-10 m-r-10">
                                         <div class="col-sm-6">
                                             <br />
-                                            <div class="col-md-6 checkbox checkbox-primary text-left">
+                                            <!--<div class="col-md-6 checkbox checkbox-primary text-left">
                                                 <input id="activeescorted" type="checkbox" disabled>
                                                 <label for="activeescorted">
                                                     מלווה פעיל
                                                 </label>
-                                            </div>
+                                            </div>-->
                                         </div>
                                     </div>
                                     <!--<div id="addressesForm">
                                         <hr />
                                         <table id="jqGrid" class="table table-striped table-bordered text-right"></table>
-                                        <div id="jqGridPager"></div>
+                                        <div id="jqGridPager"></div>-->
                                         <div class="text-right m-t-30 row">
                                             <button type="submit" id="saveCustomer" class="btn btn-success waves-effect w-md waves-light m-b-5  m-r-15"><i class="ti-save m-r-5"></i>שמור</button>
                                         </div>
-                                    </div>-->
+                                    </div>
                                 </div>
                             </div>
                         </form>
@@ -646,7 +647,7 @@
                     var lastNameH = $("#escortedLastName").val();
                     var cellPhone = $("#phone1").val();
                     var city = $("#city").val();
-                    var status = $("#statusEscorted").val();
+                    var status = $("#status").val();
                     var gender = $("#gender").val();
                     var cellphone2 = $("#phone2").val();
                     var homePhone = $("#HomePhone").val();

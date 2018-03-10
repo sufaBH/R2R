@@ -5,7 +5,7 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Web.Services;
 using System.Globalization;
-using System.Web.Script.Services;
+
 
 /// <summary>
 /// Summary description for WebService
@@ -24,8 +24,15 @@ public class WebService : System.Web.Services.WebService
     }
 
     //----------------------Road to decovery-----------------------------------------------
-
-
+    
+  [WebMethod]
+    public string getContactType(bool active)
+    {
+        JavaScriptSerializer j = new JavaScriptSerializer();
+        ContactType c = new ContactType();
+        List<ContactType> ContactTypeList = c.getContactType(active);
+        return j.Serialize(ContactTypeList);
+    }
 
     [WebMethod]
     public string getPatients(bool active)
@@ -53,6 +60,32 @@ public class WebService : System.Web.Services.WebService
         c.deactivateEscorted(active);
     }
 
+    [WebMethod]
+    public void deactivateRidePat(string ridePatNum, string active)
+    {
+        RidePat c = new RidePat();
+        c.RidePatNum = Convert.ToInt32(ridePatNum);
+        c.deactivateRidePat(active);
+    }
+
+    [WebMethod]
+    public void setRidePat(RidePat ridePat, string func)
+    {
+        RidePat p = new RidePat();
+        p = ridePat;
+        p.setRidePat(func);
+
+    }
+
+    [WebMethod]
+    public string getRidePat(string ridePatNum)
+    {
+        JavaScriptSerializer j = new JavaScriptSerializer();
+        RidePat p = new RidePat();
+        p.RidePatNum =Convert.ToInt32(ridePatNum);
+        RidePat ridePat = p.getRidePat();
+        return j.Serialize(ridePat);
+    }
 
     [WebMethod]
     public void deactivatePatient(string displayName, string active)
@@ -99,18 +132,15 @@ public class WebService : System.Web.Services.WebService
         return j.Serialize(patient);
     }
 
-    
+
     [WebMethod]
-    [ScriptMethod(ResponseFormat = ResponseFormat.Json)]
-    public string getRidePat(string test)
-    {        
-        RidePat rp = new RidePat();
-       List<RidePat> r= rp.GetRidePat();
+    public string getRidePats(bool active)
+    {
         JavaScriptSerializer j = new JavaScriptSerializer();
-        return j.Serialize(r);
+        RidePat c = new RidePat();
+        List<RidePat> ridePatsList = c.getRidePatsList(active);
+        return j.Serialize(ridePatsList);
     }
-
-
 
 
 
@@ -219,105 +249,105 @@ public class WebService : System.Web.Services.WebService
         return j.Serialize(orderName);
     }
 
-    //[WebMethod]
-    //public string getOrders(bool active, int selectedOrdersStatus, string startDate, string endDate, int selectedCustomer, int selectedService)
-    //{
-    //    if (startDate == "")
-    //    {
-    //        startDate = "01/01/1990";
-    //    }
-    //    if (endDate == "")
-    //    {
-    //        endDate = "01/01/2990";
-    //    }
-    //    DateTime startDatedt = DateTime.ParseExact(startDate, "dd/MM/yyyy", null);
-    //    DateTime endDatedt = DateTime.ParseExact(endDate, "dd/MM/yyyy", null);
+    [WebMethod]
+    public string getOrders(bool active, int selectedOrdersStatus, string startDate, string endDate, int selectedCustomer, int selectedService)
+    {
+        if (startDate == "")
+        {
+            startDate = "01/01/1990";
+        }
+        if (endDate == "")
+        {
+            endDate = "01/01/2990";
+        }
+        DateTime startDatedt = DateTime.ParseExact(startDate, "dd/MM/yyyy", null);
+        DateTime endDatedt = DateTime.ParseExact(endDate, "dd/MM/yyyy", null);
 
-    //    JavaScriptSerializer j = new JavaScriptSerializer();
-    //    Orders o = new Orders();
-    //    List<Orders> ordersList = o.getOrdersList(active, selectedOrdersStatus, startDatedt, endDatedt, selectedCustomer, selectedService);
-    //    return j.Serialize(ordersList);
-    //}
+        JavaScriptSerializer j = new JavaScriptSerializer();
+        Orders o = new Orders();
+        List<Orders> ordersList = o.getOrdersList(active, selectedOrdersStatus, startDatedt, endDatedt, selectedCustomer, selectedService);
+        return j.Serialize(ordersList);
+    }
 
-    //[WebMethod]
-    //public string getOrdersView(bool active, int selectedOrdersStatus, string startDate, string endDate, int selectedCustomer, int selectedService)
-    //{
-    //    if (startDate == "")
-    //    {
-    //        startDate = "01/01/1990";
-    //    }
-    //    if (endDate == "")
-    //    {
-    //        endDate = "01/01/2990";
-    //    }
-    //    DateTime startDatedt = DateTime.ParseExact(startDate, "dd/MM/yyyy", null);
-    //    DateTime endDatedt = DateTime.ParseExact(endDate, "dd/MM/yyyy", null);
+    [WebMethod]
+    public string getOrdersView(bool active, int selectedOrdersStatus, string startDate, string endDate, int selectedCustomer, int selectedService)
+    {
+        if (startDate == "")
+        {
+            startDate = "01/01/1990";
+        }
+        if (endDate == "")
+        {
+            endDate = "01/01/2990";
+        }
+        DateTime startDatedt = DateTime.ParseExact(startDate, "dd/MM/yyyy", null);
+        DateTime endDatedt = DateTime.ParseExact(endDate, "dd/MM/yyyy", null);
 
-    //    JavaScriptSerializer j = new JavaScriptSerializer();
-    //    Orders o = new Orders();
-    //    List<Orders> ordersList = o.getOrdersListForView(active, selectedOrdersStatus, startDatedt, endDatedt, selectedCustomer, selectedService);
-    //    return j.Serialize(ordersList);
-    //}
+        JavaScriptSerializer j = new JavaScriptSerializer();
+        Orders o = new Orders();
+        List<Orders> ordersList = o.getOrdersListForView(active, selectedOrdersStatus, startDatedt, endDatedt, selectedCustomer, selectedService);
+        return j.Serialize(ordersList);
+    }
 
-    //[WebMethod]
-    //public string getOrdersDDL(bool active, int selectedOrdersStatus, string startDate, string endDate)
-    //{
-    //    if (startDate == "")
-    //    {
-    //        startDate = "01/01/1990";
-    //    }
-    //    if (endDate == "")
-    //    {
-    //        endDate = "01/01/2990";
-    //    }
-    //    DateTime startDatedt = DateTime.ParseExact(startDate, "dd/MM/yyyy", null);
-    //    DateTime endDatedt = DateTime.ParseExact(endDate, "dd/MM/yyyy", null);
+    [WebMethod]
+    public string getOrdersDDL(bool active, int selectedOrdersStatus, string startDate, string endDate)
+    {
+        if (startDate == "")
+        {
+            startDate = "01/01/1990";
+        }
+        if (endDate == "")
+        {
+            endDate = "01/01/2990";
+        }
+        DateTime startDatedt = DateTime.ParseExact(startDate, "dd/MM/yyyy", null);
+        DateTime endDatedt = DateTime.ParseExact(endDate, "dd/MM/yyyy", null);
 
-    //    JavaScriptSerializer j = new JavaScriptSerializer();
-    //    Orders o = new Orders();
-    //    List<Orders> ordersList = o.getOrdersListForView(active, selectedOrdersStatus, startDatedt, endDatedt);
-    //    return j.Serialize(ordersList);
-    //}
+        JavaScriptSerializer j = new JavaScriptSerializer();
+        Orders o = new Orders();
+        List<Orders> ordersList = o.getOrdersListForView(active, selectedOrdersStatus, startDatedt, endDatedt);
+        return j.Serialize(ordersList);
+    }
 
-    //[WebMethod]
-    //public string getOrders(bool active, int selectedOrdersStatus, string startDate, string endDate)
-    //{
-    //    if (startDate == "")
-    //    {
-    //        startDate = "01/01/1990";
-    //    }
-    //    if (endDate == "")
-    //    {
-    //        endDate = "01/01/2990";
-    //    }
-    //    DateTime startDatedt = DateTime.ParseExact(startDate, "dd/MM/yyyy", null);
-    //    DateTime endDatedt = DateTime.ParseExact(endDate, "dd/MM/yyyy", null);
+    [WebMethod]
+    public string getOrders(bool active, int selectedOrdersStatus, string startDate, string endDate)
+    {
+        if (startDate == "")
+        {
+            startDate = "01/01/1990";
+        }
+        if (endDate == "")
+        {
+            endDate = "01/01/2990";
+        }
+        DateTime startDatedt = DateTime.ParseExact(startDate, "dd/MM/yyyy", null);
+        DateTime endDatedt = DateTime.ParseExact(endDate, "dd/MM/yyyy", null);
 
-    //    JavaScriptSerializer j = new JavaScriptSerializer();
-    //    Orders o = new Orders();
-    //    List<Orders> ordersList = o.getOrdersList(active, selectedOrdersStatus, startDatedt, endDatedt);
-    //    return j.Serialize(ordersList);
-    //}
+        JavaScriptSerializer j = new JavaScriptSerializer();
+        Orders o = new Orders();
+        List<Orders> ordersList = o.getOrdersList(active, selectedOrdersStatus, startDatedt, endDatedt);
+        return j.Serialize(ordersList);
+    }
 
-    //[WebMethod]
-    //public string getOrdersForShifts(bool active, int selectedOrdersStatus, string startDate, string endDate, int selectedCustomer, int selectedService)
-    //{
-    //    if (startDate == "")
-    //    {
-    //        startDate = "01/01/1990";
-    //    }
-    //    if (endDate == "")
-    //    {
-    //        endDate = "01/01/2990";
-    //    }
-    //    DateTime startDatedt = DateTime.ParseExact(startDate, "dd/MM/yyyy", null);
-    //    DateTime endDatedt = DateTime.ParseExact(endDate, "dd/MM/yyyy", null);
+    [WebMethod]
+    public string getOrdersForShifts(bool active, int selectedOrdersStatus, string startDate, string endDate, int selectedCustomer, int selectedService)
+    {
+        if (startDate == "")
+        {
+            startDate = "01/01/1990";
+        }
+        if (endDate == "")
+        {
+            endDate = "01/01/2990";
+        }
+        DateTime startDatedt = DateTime.ParseExact(startDate, "dd/MM/yyyy", null);
+        DateTime endDatedt = DateTime.ParseExact(endDate, "dd/MM/yyyy", null);
 
-    //    JavaScriptSerializer j = new JavaScriptSerializer();
-    //    Orders o = new Orders();
-    //    List<Orders> ordersList = o.getOrdersForShiftsList(active, selectedOrdersStatus, startDatedt, endDatedt, selectedCustomer, selectedService);
-    //    return j.Serialize(ordersList);
-    //}
+        JavaScriptSerializer j = new JavaScriptSerializer();
+        Orders o = new Orders();
+        List<Orders> ordersList = o.getOrdersForShiftsList(active, selectedOrdersStatus, startDatedt, endDatedt, selectedCustomer, selectedService);
+        return j.Serialize(ordersList);
+    }
 
     [WebMethod]
     public string getDriverOrders(int driverID, int func)

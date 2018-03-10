@@ -521,6 +521,60 @@ public class Volunteer
         return list;
     }
 
+
+    public List<Volunteer> getCoorList(bool active)
+    {
+        #region DB functions
+        string query = "select * from Volunteer v";
+        if (active)
+        {
+            query += " where v.statusVolunteer = 'פעיל' and v.typeVol='רכז'";
+        }
+
+        query += " order by firstNameH";
+
+        List<Volunteer> list = new List<Volunteer>();
+        DbService db = new DbService();
+        DataSet ds = db.GetDataSetByQuery(query);
+
+        foreach (DataRow dr in ds.Tables[0].Rows)
+        {
+            Volunteer v = new Volunteer();
+            v.DisplayName = dr["displayName"].ToString();
+            v.FirstNameA = dr["firstNameA"].ToString();
+            v.FirstNameH = dr["firstNameH"].ToString();
+            v.LastNameH = dr["lastNameH"].ToString();
+            v.LastNameA = dr["lastNameA"].ToString();
+            v.CellPhone = dr["cellPhone"].ToString();
+            v.CellPhone2 = dr["cellPhone2"].ToString();
+            v.HomePhone = dr["homePhone"].ToString();
+            v.City = dr["city"].ToString();
+            v.Address = dr["street"].ToString();
+            v.TypeVol = dr["typeVol"].ToString();
+            v.Email = dr["email"].ToString();
+            v.Day1 = dr["preferDay1"].ToString();
+            v.Hour1 = dr["preferHour1"].ToString();
+            v.Day2 = dr["preferDay2"].ToString();
+            v.Hour2 = dr["preferHour2"].ToString();
+            v.Day3 = dr["preferDay3"].ToString();
+            v.Hour3 = dr["preferHour3"].ToString();
+            v.PreferRoute1 = dr["preferRoute1"].ToString();
+            v.preferRoute2 = dr["preferRoute2"].ToString();
+            v.PreferRoute3 = dr["preferRoute3"].ToString();
+            v.JoinDate = dr["joinDate"].ToString();
+            v.Status = dr["statusVolunteer"].ToString();
+            v.KnowArabic = dr["knowArabic"].ToString();
+            v.Birthdate = dr["birthdate"].ToString();
+            v.Gender = dr["gender"].ToString();
+
+
+            list.Add(v);
+        }
+        #endregion
+
+        return list;
+    }
+
     public Volunteer getVolunteer()
     {
         #region DB functions
