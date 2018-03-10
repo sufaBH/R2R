@@ -108,25 +108,25 @@
             });
         }
 
-        function generatePaymentType() {
-            var $select = $("#paymentType");
-            $.ajax({
-                dataType: "json",
-                url: "WebService.asmx/getPaymentTypes",
-                contentType: "application/json; charset=utf-8",
-                type: "POST",
-                async: false,
-                data: JSON.stringify({}),
-                success: function (data) {
-                    var arr_paymentTypes = JSON.parse(data.d);
-                    $('<option>', { value: -1, text: "בחר" }).attr({ 'selected': '', 'disabled': '' }).appendTo($select);
-                    for (i in arr_paymentTypes) {
-                        $('<option>', { value: arr_paymentTypes[i].PaymentTypeID, text: arr_paymentTypes[i].PaymentType }).appendTo($select);
-                    }
-                },
-                error: function (err) { alert("Error"); }
-            });
-        }
+       // function generatePaymentType() {
+        //    var $select = $("#paymentType");
+        //    $.ajax({
+        //        dataType: "json",
+        //        url: "WebService.asmx/getPaymentTypes",
+        //        contentType: "application/json; charset=utf-8",
+        //        type: "POST",
+        //        async: false,
+        //        data: JSON.stringify({}),
+        //        success: function (data) {
+        //            var arr_paymentTypes = JSON.parse(data.d);
+        //            $('<option>', { value: -1, text: "בחר" }).attr({ 'selected': '', 'disabled': '' }).appendTo($select);
+        //            for (i in arr_paymentTypes) {
+        //                $('<option>', { value: arr_paymentTypes[i].PaymentTypeID, text: arr_paymentTypes[i].PaymentType }).appendTo($select);
+        //            }
+        //        },
+        //        error: function (err) { alert("Error"); }
+        //    });
+        //}
 
         function generateHospital() {
             var $select = $("#hospital");

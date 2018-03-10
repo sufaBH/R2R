@@ -264,8 +264,8 @@ public class Destination
             tmp.Remarks = dr["remarks"].ToString();
             tmp.ManagerName = dr["managerName"].ToString();
             tmp.ManagerLastName = dr["managerLastName"].ToString();
-            tmp.ManagerPhones = (int)dr["managerPhones1"];
-            tmp.ManagerPhones2 = (int)dr["managerPhones2"];
+            tmp.ManagerPhones = int.Parse(dr["managerPhones1"].ToString());
+            tmp.ManagerPhones2 = int.Parse(dr["managerPhones2"].ToString());
             list.Add(tmp);
         }
         #endregion
@@ -297,8 +297,10 @@ public class Destination
             tmp.Remarks = dr["remarks"].ToString();
             tmp.ManagerName = dr["managerName"].ToString();
             tmp.ManagerLastName = dr["managerLastName"].ToString();
-            tmp.ManagerPhones = (int)dr["managerPhones1"];
-            tmp.ManagerPhones2 = (int)dr["managerPhones2"];
+            //tmp.ManagerPhones = (int)dr["managerPhones1"];
+            //tmp.ManagerPhones2 = (int)dr["managerPhones2"];
+            tmp.ManagerPhones = int.Parse(dr["managerPhones1"].ToString());
+            tmp.ManagerPhones2 = int.Parse(dr["managerPhones2"].ToString());
             list.Add(tmp);
         }
         #endregion
