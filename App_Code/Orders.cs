@@ -585,7 +585,7 @@ public class Orders
     public void deactivateOrder(int active)
     {
         DbService db = new DbService();
-        db.ExecuteQuery("UPDATE Orders SET OrderStatusID=" + active + " WHERE OrderID=" + OrderID);
+        db.ExecuteNonQuery("UPDATE Orders SET OrderStatusID=" + active + " WHERE OrderID=" + OrderID);
     }
 
 
@@ -739,7 +739,7 @@ public class Orders
         {
             query = "insert into Orders values ('" + OrderName + "'," + Customer.CustomerID + ",'" + sqlFormattedDate + "'," + 1 + ",'" + Comments + "', " + ShipFrom.AddressID + ", " + AddTime + ", '" + Container + "', " + OrderLicenseType.DriverLicenseTypeID + ", '" + "N" + "',null,null,null, " + OrderService.ServiceID + ", " + ShipTo.AddressID + "," + TotalPrice + ", " + OrderCertificationType.DriverLicenseTypeID + ", " + DeliveryDuration + ")";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
     public void saveOrderInShift(List<Shifts> allDriversShifts)
@@ -753,7 +753,7 @@ public class Orders
                 string query = "";
                 query = "UPDATE Orders SET InShift = 'Y', OrderStatusID = 3, ShiftSort = '" + sortNum + "', TruckID = " + item.TruckID + ", DriverID = " + item.DriverID + " WHERE OrderID = " + order;
                 sortNum++;
-                db.ExecuteQuery(query);
+                db.ExecuteNonQuery(query);
             }
             sortNum = 1;
         }
@@ -766,7 +766,7 @@ public class Orders
             DbService db = new DbService();
             string query = "";
             query = "UPDATE Orders SET InShift = 'N',OrderStatusID = 1, ShiftSort = NULL, TruckID = NULL, DriverID = NULL WHERE OrderID = " + order;
-            db.ExecuteQuery(query);
+            db.ExecuteNonQuery(query);
         }
     }
 

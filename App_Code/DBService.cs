@@ -55,7 +55,7 @@ public class DbService
         return ds;
     }
 
-    public int ExecuteQuery(string sqlQuery, CommandType cmdType = CommandType.Text, params SqlParameter[] parametersArray)
+    public int ExecuteNonQuery(string sqlQuery, CommandType cmdType = CommandType.Text, params SqlParameter[] parametersArray)
     {
         int row_affected = 0;
         using (con)

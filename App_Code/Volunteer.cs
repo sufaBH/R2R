@@ -590,12 +590,12 @@ public class Volunteer
             query = prefix + sb.ToString();
             //query = "insert into Customers values ('" + CustomerName + "','" + CustomerContactName + "','" + AccountID + "','Y','" + Phone1 + "','" + Phone2 + "','" + Email + "'," + PaymentType.PaymentTypeID + ",'" + Comments + "'," + PreferedDrivers.DriverID + ", '" + RegistrationNumber + "', '" + BillingAddress + "')";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
     public void deactivateCustomer(string active)
     {
         DbService db = new DbService();
-        db.ExecuteQuery("UPDATE Volunteer SET statusVolunteer='" + active + "' WHERE displayName='" + DisplayName+"'");
+        db.ExecuteNonQuery("UPDATE Volunteer SET statusVolunteer='" + active + "' WHERE displayName='" + DisplayName+"'");
     }
 }

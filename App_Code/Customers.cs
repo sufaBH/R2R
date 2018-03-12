@@ -336,7 +336,7 @@ public class Customers
         {
             query = "insert into Customers values ('" + CustomerName + "','" + CustomerContactName + "','" + AccountID + "','Y','" + Phone1 + "','" + Phone2 + "','" + Email + "'," + PaymentType.PaymentTypeID + ",'" + Comments + "'," + PreferedDrivers.DriverID + ", '" + RegistrationNumber + "', '" + BillingAddress + "')";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
     public int getLastCustomerID()
@@ -356,6 +356,6 @@ public class Customers
     public void deactivateCustomer(string active)
     {
         DbService db = new DbService();
-        db.ExecuteQuery("UPDATE Customers SET Active='" + active + "' WHERE CustomerID=" + CustomerID);
+        db.ExecuteNonQuery("UPDATE Customers SET Active='" + active + "' WHERE CustomerID=" + CustomerID);
     }
 }

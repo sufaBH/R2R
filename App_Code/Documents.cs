@@ -368,7 +368,7 @@ public class Documents
         {
             query = "insert into Documents values ('" + DocumentName + "'," + DocType.DocumentTypeID + "," + TotalPrice + ",'" + Comments + "','" + sqlFormattedDate + "','Y'," + SendBy.DriverID + ", '" + ContainerID + "'," + RelatedOrder.OrderID + ", NULL , 'N')";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
     public void setDocumentApp(string func)
@@ -385,13 +385,13 @@ public class Documents
         {
             query = "insert into Documents values ('" + DocumentName + "'," + DocType.DocumentTypeID + "," + TotalPrice + ",'" + Comments + "','" + sqlFormattedDate + "','Y'," + SendBy.DriverID + ", '" + ContainerID + "'," + RelatedOrder.OrderID + ","+ImgID+",'Y')";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
 
         if (DocType.DocumentTypeID == 1)
         {
             DbService db1 = new DbService();
             string query1 = "UPDATE Orders SET OrderStatusID = 6 where OrderID = " + RelatedOrder.OrderID;
-            db1.ExecuteQuery(query1);
+            db1.ExecuteNonQuery(query1);
         }
     }
 
@@ -399,7 +399,7 @@ public class Documents
     public void deactivateDocument(string active)
     {
         DbService db = new DbService();
-        db.ExecuteQuery("UPDATE Documents SET Active='" + active + "' WHERE DocumentID=" + DocumentID);
+        db.ExecuteNonQuery("UPDATE Documents SET Active='" + active + "' WHERE DocumentID=" + DocumentID);
     }
 
     public List<Documents> getDriverDocumentsList(int driverID, int selectedDocumentTypeID, DateTime startDate, DateTime endDate)

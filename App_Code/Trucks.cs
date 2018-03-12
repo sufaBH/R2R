@@ -324,14 +324,14 @@ public class Trucks
         {
             query = "insert into Trucks values (" + TruckLicense + ",'" + Manufacturer+"','" + Model + "','Y','" + KMToDate + "','"+Hand+"'," + PurchaseCost + ",'" + PurchaseYear+"'," + TruckType.TruckTypeID + ", '" + Urea + "', '" + sqlFormattedOnRoadDate + "', '" + sqlFormattedInsuranceExpiredDate + "')";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
 
     public void deactivateTruck(string active)
     {
         DbService db = new DbService();
-        db.ExecuteQuery("UPDATE Trucks SET Active='" + active + "' WHERE TruckID=" + TruckID);
+        db.ExecuteNonQuery("UPDATE Trucks SET Active='" + active + "' WHERE TruckID=" + TruckID);
     }
 
     public List<Trucks> getAvailableTrucksList(DateTime selecetdDate)

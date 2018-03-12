@@ -402,7 +402,7 @@ public class TruckHandlings
         {
             query = "insert into TruckHandlings values ('" + TruckHandlingDescription + "','" + HandlingProvider + "','Y'," + Cost + ",'" + sqlFormattedDate + "'," + TruckHandlingType.TruckHandlingTypeID + "," + Truck.TruckID + ", NULL,'N')";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
     
@@ -420,14 +420,14 @@ public class TruckHandlings
         {
             query = "insert into TruckHandlings values ('" + TruckHandlingDescription + "','" + HandlingProvider + "','Y'," + Cost + ",'" + sqlFormattedDate + "'," + TruckHandlingType.TruckHandlingTypeID + "," + Truck.TruckID + "," + ImgID + ",'Y')";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
 
     public void deactivateTruckHandlings(string active)
     {
         DbService db = new DbService();
-        db.ExecuteQuery("UPDATE TruckHandlings SET Active='" + active + "' WHERE TruckHandlingID=" + TruckHandlingID);
+        db.ExecuteNonQuery("UPDATE TruckHandlings SET Active='" + active + "' WHERE TruckHandlingID=" + TruckHandlingID);
     }
 
 }

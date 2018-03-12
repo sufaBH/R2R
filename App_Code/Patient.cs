@@ -468,7 +468,7 @@ public class Patient
     public void deactivatePatient(string active)
     {
         DbService db = new DbService();
-        db.ExecuteQuery("UPDATE Patient SET statusPatient='" + active + "' WHERE displayName='" + DisplayName + "'");
+        db.ExecuteNonQuery("UPDATE Patient SET statusPatient='" + active + "' WHERE displayName='" + DisplayName + "'");
     }
 
     public void setPatient(string func)
@@ -493,7 +493,7 @@ public class Patient
             query = prefix + sb.ToString();
             //query = "insert into Customers values ('" + CustomerName + "','" + CustomerContactName + "','" + AccountID + "','Y','" + Phone1 + "','" + Phone2 + "','" + Email + "'," + PaymentType.PaymentTypeID + ",'" + Comments + "'," + PreferedDrivers.DriverID + ", '" + RegistrationNumber + "', '" + BillingAddress + "')";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
     public List<Escorted> getescortedsList(string displayName)
@@ -522,6 +522,7 @@ public class Patient
             e.Status = dr["statusEscorted"].ToString();
             e.ContactType = dr["contactType"].ToString();
             e.Gender = dr["gender"].ToString();
+            e.Addrees = dr["city"].ToString();
 
             list.Add(e);
         }

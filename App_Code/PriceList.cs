@@ -390,13 +390,13 @@ public class PriceList
         {
             query = "insert into PriceList values (" + Origin.AddressID + "," + Destination.AddressID + "," + Customer.CustomerID + "," + Service.ServiceID + "," + DeliveryTime + "," + DeliveryDistance + "," + Price + ",'Y')";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
 
     public void deactivatePriceList(string active)
     {
         DbService db = new DbService();
-        db.ExecuteQuery("UPDATE PriceList SET Active='" + active + "' WHERE PriceListID=" + PriceListID);
+        db.ExecuteNonQuery("UPDATE PriceList SET Active='" + active + "' WHERE PriceListID=" + PriceListID);
     }
 }

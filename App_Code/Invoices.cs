@@ -69,7 +69,7 @@ public class Invoices
     {
         DbService db = new DbService();
         string queryCreate = "insert into Invoices (Date,InvoiceStatusID) VALUES (GETDATE(),1)";
-        db.ExecuteQuery(queryCreate);
+        db.ExecuteNonQuery(queryCreate);
 
         DbService dbGetID = new DbService();
         string queryGetID = "select max(InvoiceID) as maxID from Invoices";
@@ -109,15 +109,15 @@ public class Invoices
 
         DbService dbSetInvoice = new DbService();
         string querySetInvoice = "insert into InvoiceLines values (" + InvoiceID + "," + il.OrderService.ServiceID + "," + il.ShipFrom.AddressID + "," + il.ShipTo.AddressID + "," + il.TotalPrice + "," + il.OrderID + ",'" + sqlFormattedDate + "')";
-        dbSetInvoice.ExecuteQuery(querySetInvoice);
+        dbSetInvoice.ExecuteNonQuery(querySetInvoice);
 
         DbService dbSetInvoiceCustomer = new DbService();
         string querySetInvoiceCustomer = "insert into Invoices (CustomerID) values (" + CustomerID + ")";
-        dbSetInvoice.ExecuteQuery(querySetInvoiceCustomer);
+        dbSetInvoice.ExecuteNonQuery(querySetInvoiceCustomer);
 
         DbService dbChangeOrderStatus = new DbService();
         string queryChangeOrderStatus = "UPDATE Orders SET OrderStatusID=6 where OrderID=" + orderID;
-        dbChangeOrderStatus.ExecuteQuery(queryChangeOrderStatus);
+        dbChangeOrderStatus.ExecuteNonQuery(queryChangeOrderStatus);
 
     }
 
@@ -299,7 +299,7 @@ public class Invoices
 
         DbService db = new DbService();
         string queryCreate = "insert into Invoices (Date,InvoiceStatusID,CustomerID) VALUES (GETDATE(),1," + selectedCustomer + ")";
-        db.ExecuteQuery(queryCreate);
+        db.ExecuteNonQuery(queryCreate);
 
         DbService dbGetID = new DbService();
         string queryGetID = "select max(InvoiceID) as maxID from Invoices";
@@ -317,11 +317,11 @@ public class Invoices
             DbService dbSetInvoice = new DbService();
             float TotalPrice = Convert.ToSingle(dr["TotalPrice"]);
             string querySetInvoice = "insert into InvoiceLines values (" + InvoiceID + "," + (int)dr["ServiceID"] + "," + (int)dr["ShipFromID"] + "," + (int)dr["ShipToID"] + "," + TotalPrice + "," + (int)dr["OrderID"] + ",'" + orderDate + "')";
-            dbSetInvoice.ExecuteQuery(querySetInvoice);
+            dbSetInvoice.ExecuteNonQuery(querySetInvoice);
 
             DbService dbChangeStatus = new DbService();
             string queryChangeStatus = "update Orders SET OrderStatusId=7 where OrderID=" + (int)dr["OrderID"] ;
-            dbChangeStatus.ExecuteQuery(queryChangeStatus);
+            dbChangeStatus.ExecuteNonQuery(queryChangeStatus);
 
         }
 

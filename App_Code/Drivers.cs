@@ -442,14 +442,14 @@ public class Drivers
         {
             query = "insert into Drivers values ('" + DriverNumber + "','" + FirstName + "','" + LastName + "','" + Phone + "','" + Email + "','Y','" + AccountID + "','" + AppPassword + "'," + CityLiving.CityID + ", " + DriverTruck.TruckID + ", " + LicenseType.DriverLicenseTypeID + ", " + CertificationType.DriverLicenseTypeID + ", '" + sqlFormattedDateOfBirth + "', '" + sqlFormattedDriverLicenseExpiredDate + "', '" + sqlFormattedDriverCertificationExpiredDate + "')";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
 
     public void deactivateDriver(string active)
     {
         DbService db = new DbService();
-        db.ExecuteQuery("UPDATE Drivers SET Active='" + active + "' WHERE DriverID=" + DriverID);
+        db.ExecuteNonQuery("UPDATE Drivers SET Active='" + active + "' WHERE DriverID=" + DriverID);
     }
 
     public List<Drivers> getAvailableDriversList(DateTime selecetdDate)

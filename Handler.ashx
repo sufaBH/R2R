@@ -29,11 +29,11 @@ public class Handler : IHttpHandler {
 
         if (func == "New")
         {
-            db.ExecuteQuery("insert into Images values(@imgID,CONVERT(varbinary(max),@img),@tbl)", System.Data.CommandType.Text, new System.Data.SqlClient.SqlParameter("@img", b), new System.Data.SqlClient.SqlParameter("@imgID", id), new System.Data.SqlClient.SqlParameter("@tbl", associatedTbl));
+            db.ExecuteNonQuery("insert into Images values(@imgID,CONVERT(varbinary(max),@img),@tbl)", System.Data.CommandType.Text, new System.Data.SqlClient.SqlParameter("@img", b), new System.Data.SqlClient.SqlParameter("@imgID", id), new System.Data.SqlClient.SqlParameter("@tbl", associatedTbl));
         }
         else if (func == "Edit")
         {
-            db.ExecuteQuery("update Images set ImageUrl = CONVERT(varbinary(max),@img) where ImageID = @imgID", System.Data.CommandType.Text, new System.Data.SqlClient.SqlParameter("@img", b), new System.Data.SqlClient.SqlParameter("@imgID", id));
+            db.ExecuteNonQuery("update Images set ImageUrl = CONVERT(varbinary(max),@img) where ImageID = @imgID", System.Data.CommandType.Text, new System.Data.SqlClient.SqlParameter("@img", b), new System.Data.SqlClient.SqlParameter("@imgID", id));
         }
 
     }

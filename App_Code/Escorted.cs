@@ -24,6 +24,9 @@ public class Escorted
     string status;//סטטוס
     string contactType;//קרבה לחולה
     string gender;
+    int id;
+
+    public int Id { get; set; }
 
     public Patient Pat
     {
@@ -268,20 +271,21 @@ public class Escorted
     public void deactivateEscorted(string active)
     {
         DbService db = new DbService();
-        db.ExecuteQuery("UPDATE Escorted SET statusEscorted='" + active + "' WHERE displayName='" + DisplayName + "'");
+        db.ExecuteNonQuery("UPDATE Escorted SET statusEscorted='" + active + "' WHERE displayName='" + DisplayName + "'");
     }
 
 
     public Escorted getEscorted()
     {
         #region DB functions
-        string query = "select patient,displayName, firstNameH,firstNameA, lastNameH,lastNameA, cellPhone,cellPhone2,homePhone,city,statusEscorted, contactType,gender from Escorted where displayName ='" + displayName + "'";
+        string query = "select id,patient,displayName, firstNameH,firstNameA, lastNameH,lastNameA, cellPhone,cellPhone2,homePhone,city,statusEscorted, contactType,gender from Escorted where displayName ='" + displayName + "'";
         Escorted p = new Escorted();
         DbService db = new DbService();
         DataSet ds = db.GetDataSetByQuery(query);
 
         foreach (DataRow dr in ds.Tables[0].Rows)
         {
+            p.Id = int.Parse(dr["id"].ToString());
             p.Pat = new Patient(dr["patient"].ToString());
             p.DisplayName = dr["displayName"].ToString();
             p.FirstNameA = dr["firstNameA"].ToString();
@@ -309,7 +313,7 @@ public class Escorted
         if (func == "edit")
         {
             query = "UPDATE Escorted SET patient = '" + Pat.DisplayName + "',displayName = '" + DisplayName + "', firstNameH = '" + FirstNameH + "', firstNameA = '" + FirstNameA + "', lastNameH = '" + LastNameH + "', lastNameA = '" + LastNameA + "', cellPhone = '" + CellPhone + "', cellPhone2 = " + CellPhone2 +
-            ", homePhone = '" + HomePhone + "', city = '" + Addrees + "', statusEscorted = '" + Status + "', contactType = '" + ContactType + "', gender = '" + Gender + "' WHERE displayName = '" + DisplayName + "'";
+            ", homePhone = '" + HomePhone + "', city = '" + Addrees + "', statusEscorted = '" + Status + "', contactType = '" + ContactType + "', gender = '" + Gender + "' WHERE id = '" + Id + "'";
         }
         else if (func == "new")
         {
@@ -322,7 +326,7 @@ public class Escorted
             query = prefix + sb.ToString();
             //query = "insert into Customers values ('" + CustomerName + "','" + CustomerContactName + "','" + AccountID + "','Y','" + Phone1 + "','" + Phone2 + "','" + Email + "'," + PaymentType.PaymentTypeID + ",'" + Comments + "'," + PreferedDrivers.DriverID + ", '" + RegistrationNumber + "', '" + BillingAddress + "')";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
     //public DataTable read()

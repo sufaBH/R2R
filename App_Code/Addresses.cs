@@ -216,7 +216,7 @@ public class Addresses
             query = "insert into Addresses values (" + customerID + "," + CustomerCity.CityID + ",'" + AddressName + "','" + Street + "','" + Number + "','" + Comments + "','Y', '" + ContactPerson + "', '" + ContactPhone + "')";
         }
 
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
     //updates the active state of a given list of customers' addresses
@@ -225,7 +225,7 @@ public class Addresses
         foreach (var item in deactiveAddresses)
         {
             DbService db = new DbService();
-            db.ExecuteQuery("UPDATE Addresses SET Active='N' WHERE AddressID=" + item);
+            db.ExecuteNonQuery("UPDATE Addresses SET Active='N' WHERE AddressID=" + item);
         }
     }
 

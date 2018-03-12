@@ -170,13 +170,13 @@ public class Services
         {
             query = "insert into Services values ('"+Service+"','"+ServiceDescription+"',"+Price+",'Y')";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
     public void deactivateService(string active)
     {
         DbService db = new DbService();
-        db.ExecuteQuery("UPDATE Services SET Active='" + active + "' WHERE ServiceID="+ServiceID);
+        db.ExecuteNonQuery("UPDATE Services SET Active='" + active + "' WHERE ServiceID="+ServiceID);
     }
 
     public int getServiceID()

@@ -157,7 +157,7 @@ public class DriverConstraints
     public void deactivateDriverConstraints(string active)
     {
         DbService db = new DbService();
-        db.ExecuteQuery("UPDATE DriverConstraints SET Active='" + active + "' WHERE DriverConstraintID=" + DriverConstraintID);
+        db.ExecuteNonQuery("UPDATE DriverConstraints SET Active='" + active + "' WHERE DriverConstraintID=" + DriverConstraintID);
     }
 
     public void setDriverConstraint(string func)
@@ -173,7 +173,7 @@ public class DriverConstraints
         {
             query = "insert into DriverConstraints values ('" + sqlDate + "'," + Driver.DriverID + ",'" + Comments + "','Y')";
         }
-        db.ExecuteQuery(query);
+        db.ExecuteNonQuery(query);
     }
 
 }
