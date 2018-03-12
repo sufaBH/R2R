@@ -10,7 +10,7 @@
 
     <link rel="shortcut icon" href="assets/images/favicon_1.ico">
 
-    <title>לקוח</title>
+    <title>הסעת חולה</title>
 
     <link href="../plugins/switchery/switchery.min.css" rel="stylesheet" />
     <link href="assets/css/bootstrap-rtl.min.css" rel="stylesheet" type="text/css">
@@ -112,45 +112,100 @@
             });
         }
 
-        function generateStatus(volunteer) {
-            var $select = $("#statusVolunteer");
-            if (volunteer.Status != "") {
-                $('<option>', { value: volunteer.Status, text: volunteer.Status }).appendTo($select);
+        function generatePat() {
+            var $select = $("#pat");
+            $.ajax({
+                dataType: "json",
+                url: "WebService.asmx/getPatients",
+                contentType: "application/json; charset=utf-8",
+                type: "POST",
+                async: false,
+                data: JSON.stringify({ active: active }),
+                success: function (data) {
+                    var arr_pat = JSON.parse(data.d);
+                    $('<option>', { value: "", text: "בחר" }).attr({ 'selected': '', 'disabled': '' }).appendTo($select);
+                    for (i in arr_pat) {
+                        $('<option>', { value: arr_pat[i].DisplayName, text: arr_pat[i].DisplayName }).appendTo($select);
+                    }
+                },
+                error: function (err) { alert("Error"); }
+            });
+        }
+
+        function generateCoor() {
+            var $select = $("#coordinator");
+            $.ajax({
+                dataType: "json",
+                url: "WebService.asmx/getCoorList",
+                contentType: "application/json; charset=utf-8",
+                type: "POST",
+                async: false,
+                data: JSON.stringify({}),
+                success: function (data) {
+                    var arr_coor = JSON.parse(data.d);
+                    $('<option>', { value: "", text: "בחר" }).attr({ 'selected': '', 'disabled': '' }).appendTo($select);
+                    for (i in arr_pat) {
+                        $('<option>', { value: arr_coor[i].DisplayName, text: arr_coor[i].DisplayName }).appendTo($select);
+                    }
+                },
+                error: function (err) { alert("Error"); }
+            });
+        }
+
+        function generateEsc() {
+            var $select = $("#escorted1");
+            var $select2 = $("#escorted2");
+            var $select3= $("#escorted3");
+            var displayName = document.getElementById("pat").val();
+            $.ajax({
+                dataType: "json",
+                url: "WebService.asmx/getPatientEscorted",
+                contentType: "application/json; charset=utf-8",
+                type: "POST",
+                async: false,
+                data: JSON.stringify({ displayName: displayName}),
+                success: function (data) {
+                    var arr_esc = JSON.parse(data.d);
+                    $('<option>', { value: "", text: "בחר" }).attr({ 'selected': '', 'disabled': '' }).appendTo($select);
+                    $('<option>', { value: "", text: "בחר" }).attr({ 'selected': '', 'disabled': '' }).appendTo($select2);
+                    $('<option>', { value: "", text: "בחר" }).attr({ 'selected': '', 'disabled': '' }).appendTo($select3);
+                    for (i in arr_esc) {
+                        $('<option>', { value: arr_esc[i].DisplayName, text: arr_esc[i].DisplayName }).appendTo($select);
+                        $('<option>', { value: arr_esc[i].DisplayName, text: arr_esc[i].DisplayName }).appendTo($select2);
+                        $('<option>', { value: arr_esc[i].DisplayName, text: arr_esc[i].DisplayName }).appendTo($select3);
+                    }
+                },
+                error: function (err) { alert("Error"); }
+            });
+        }
+        function generateStatus(ridePat) {
+            var $select = $("#statusRidePat");
+            if (ridePat.Status != "") {
+                $('<option>', { value: ridePat.Status, text: ridePat.Status }).appendTo($select);
             }
             $('<option>', { value: "", text: "בחר " }).appendTo($select);
 
-            $('<option>', { value: "פעיל", text: "פעיל " }).appendTo($select);
-            $('<option>', { value: "לא פעיל", text: "לא פעיל " }).appendTo($select);
+            $('<option>', { value: "ממתינה לשיבוץ", text: "ממתינה לשיבוץ " }).appendTo($select
+            $('<option>', { value: "משובצת", text: "משובצת " }).appendTo($select);
+            $('<option>', { value: "מוקפאת", text: "מוקפאת " }).appendTo($select);
+            $('<option>', { value: "בוצעה", text: "בוצעה " }).appendTo($select);
+            $('<option>', { value: "בדרך", text: "בדרך " }).appendTo($select);
         }
 
         function generateStatus1() {
-            var $select = $("#statusVolunteer");
+            var $select = $("#statusRidePat");
             $('<option>', { value: "", text: "בחר " }).appendTo($select);
-            $('<option>', { value: "פעיל", text: "פעיל " }).appendTo($select);
-            $('<option>', { value: "לא פעיל", text: "לא פעיל " }).appendTo($select);
+            $('<option>', { value: "ממתינה לשיבוץ", text: "ממתינה לשיבוץ " }).appendTo($select
+            $('<option>', { value: "משובצת", text: "משובצת " }).appendTo($select);
+            $('<option>', { value: "מוקפאת", text: "מוקפאת " }).appendTo($select);
+            $('<option>', { value: "בוצעה", text: "בוצעה " }).appendTo($select);
+            $('<option>', { value: "בדרך", text: "בדרך " }).appendTo($select);
         }
 
-        function generateGender(volunteer) {
-            var $select = $("#gender");
-            if (volunteer.Gender != "") {
-                $('<option>', { value: volunteer.Gender, text: volunteer.Gender }).appendTo($select);
-            }
-            $('<option>', { value: "", text: "בחר " }).appendTo($select);
-            $('<option>', { value: "זכר", text: "זכר " }).appendTo($select);
-            $('<option>', { value: "נקבה", text: "נקבה " }).appendTo($select);
-        }
-
-        function generateGender1() {
-            var $select = $("#gender");
-            $('<option>', { value: "", text: "בחר " }).appendTo($select);
-            $('<option>', { value: "זכר", text: "זכר " }).appendTo($select);
-            $('<option>', { value: "נקבה", text: "נקבה " }).appendTo($select);
-        }
 
         function generateDestination() {
-            var $select = $("#preferRoute1");
-            var $select1 = $("#PreferedDrivers2");
-            var $select2 = $("#preferedDrivers3");
+            var $select = $("#startPlace");
+            var $select1 = $("#target");
             $.ajax({
                 dataType: "json",
                 url: "WebService.asmx/getDestinationView",
@@ -163,13 +218,13 @@
 
                     $('<option>', { value: "", text: "בחר " }).appendTo($select);
                     $('<option>', { value: "", text: "בחר " }).appendTo($select1);
-                    $('<option>', { value: "", text: "בחר " }).appendTo($select2);
+                   // $('<option>', { value: "", text: "בחר " }).appendTo($select2);
 
                     for (i in arr_drivers) {
 
                         $('<option>', { value: arr_drivers[i].Name, text: arr_drivers[i].Name }).appendTo($select);
                         $('<option>', { value: arr_drivers[i].Name, text: arr_drivers[i].Name }).appendTo($select1);
-                        $('<option>', { value: arr_drivers[i].Name, text: arr_drivers[i].Name }).appendTo($select2);
+                       // $('<option>', { value: arr_drivers[i].Name, text: arr_drivers[i].Name }).appendTo($select2);
 
                     }
                 },
@@ -178,11 +233,10 @@
         }
 
 
-        function generatePreferDestination(volunteer) {
+        function generatePreferDestination(ridePat) {
 
-            var $select = $("#preferRoute1");
-            var $select1 = $("#PreferedDrivers3");
-            var $select2 = $("#preferedDrivers2");
+            var $select = $("#startPlace");
+            var $select1 = $("#target");
             $.ajax({
                 dataType: "json",
                 url: "WebService.asmx/getDestinationView",
@@ -192,124 +246,51 @@
                 data: JSON.stringify({ active: true }),
                 success: function (data) {
                     var arr_drivers = JSON.parse(data.d);
-                    if (volunteer.PreferRoute1 != "") {
-                        $('<option>', { value: volunteer.PreferRoute1, text: volunteer.PreferRoute1 }).appendTo($select);
+                    if (ridePat.StartPlace != "") {
+                        $('<option>', { value: ridePat.StartPlace, text: ridePat.StartPlace }).appendTo($select);
                     }
-                    if (volunteer.PreferRoute2 != "") {
-                        $('<option>', { value: volunteer.PreferRoute2, text: volunteer.PreferRoute2 }).appendTo($select1);
-                    }
-                    if (volunteer.PreferRoute3 != "") {
-                        $('<option>', { value: volunteer.PreferRoute3, text: volunteer.PreferRoute3 }).appendTo($select2);
+                    if (ridePat.Target != "") {
+                        $('<option>', { value: ridePat.Target, text: ridePat.Target }).appendTo($select1);
                     }
                     $('<option>', { value: "", text: "בחר " }).appendTo($select);
                     $('<option>', { value: "", text: "בחר " }).appendTo($select1);
-                    $('<option>', { value: "", text: "בחר " }).appendTo($select2);
 
                     for (i in arr_drivers) {
                         $('<option>', { value: arr_drivers[i].Name, text: arr_drivers[i].Name }).appendTo($select);
                         $('<option>', { value: arr_drivers[i].Name, text: arr_drivers[i].Name }).appendTo($select1);
-                        $('<option>', { value: arr_drivers[i].Name, text: arr_drivers[i].Name }).appendTo($select2);
+                      //  $('<option>', { value: arr_drivers[i].Name, text: arr_drivers[i].Name }).appendTo($select2);
                     }
                 },
                 error: function (err) { alert("Error"); }
             });
         }
 
-        function generatePreferDayAndHour(volunteer) {
+        function generatePreferDayAndHour(ridePat) {
             var $selectDay1 = $("#day1");
-            var $selectDay2 = $("#day2");
-            var $selectDay3 = $("#day3");
-            var $selectHour1 = $("#hour1");
-            var $selectHour2 = $("#hour2");
-            var $selectHour3 = $("#hour3");
-            if (volunteer.Day1 != "")
-                $('<option>', { value: volunteer.Day1, text: volunteer.Day1 }).appendTo($selectDay1);
-            if (volunteer.Day2 != "")
-                $('<option>', { value: volunteer.Day2, text: volunteer.Day2 }).appendTo($selectDay2);
-            if (volunteer.Day3 != "")
-                $('<option>', { value: volunteer.Day3, text: volunteer.Day3 }).appendTo($selectDay3);
-            if (volunteer.Hour1 != "")
-                $('<option>', { value: volunteer.Hour1, text: volunteer.Hour1 }).appendTo($selectHour1);
-            if (volunteer.Hour2 != "")
-                $('<option>', { value: volunteer.Hour2, text: volunteer.Hour2 }).appendTo($selectHour2);
-            if (volunteer.Hour3 != "")
-                $('<option>', { value: volunteer.Hour3, text: volunteer.Hour3 }).appendTo($selectHour3);
+            if (ridePat.Day != "")
+                $('<option>', { value: ridePat.Day, text: ridePat.Day }).appendTo($selectDay1);
             $('<option>', { value: "", text: "בחר " }).appendTo($selectDay1);
-            $('<option>', { value: "", text: "בחר " }).appendTo($selectDay2);
-            $('<option>', { value: "", text: "בחר " }).appendTo($selectDay3);
-            $('<option>', { value: "", text: "בחר " }).appendTo($selectHour1);
-            $('<option>', { value: "", text: "בחר " }).appendTo($selectHour2);
-            $('<option>', { value: "", text: "בחר " }).appendTo($selectHour3);
-            $('<option>', { value: "בוקר", text: "בוקר " }).appendTo($selectHour1);
-            $('<option>', { value: "בוקר", text: "בוקר " }).appendTo($selectHour2);
-            $('<option>', { value: "בוקר", text: "בוקר " }).appendTo($selectHour3);
-            $('<option>', { value: "אחהצ", text: "אחהצ " }).appendTo($selectHour1);
-            $('<option>', { value: "אחהצ", text: "אחהצ " }).appendTo($selectHour2);
-            $('<option>', { value: "אחהצ", text: "אחהצ " }).appendTo($selectHour3);
             $('<option>', { value: "ראשון", text: "ראשון " }).appendTo($selectDay1);
-            $('<option>', { value: "ראשון", text: "ראשון " }).appendTo($selectDay2);
-            $('<option>', { value: "ראשון", text: "ראשון " }).appendTo($selectDay3);
             $('<option>', { value: "שני", text: "שני " }).appendTo($selectDay1);
-            $('<option>', { value: "שני", text: "שני " }).appendTo($selectDay2);
-            $('<option>', { value: "שני", text: "שני " }).appendTo($selectDay3);
             $('<option>', { value: "שלישי", text: "שלישי " }).appendTo($selectDay1);
-            $('<option>', { value: "שלישי", text: "שלישי " }).appendTo($selectDay2);
-            $('<option>', { value: "שלישי", text: "שלישי " }).appendTo($selectDay3);
             $('<option>', { value: "רביעי", text: "רביעי " }).appendTo($selectDay1);
-            $('<option>', { value: "רביעי", text: "רביעי " }).appendTo($selectDay2);
-            $('<option>', { value: "רביעי", text: "רביעי " }).appendTo($selectDay3);
             $('<option>', { value: "חמישי", text: "חמישי " }).appendTo($selectDay1);
-            $('<option>', { value: "חמישי", text: "חמישי " }).appendTo($selectDay2);
-            $('<option>', { value: "חמישי", text: "חמישי " }).appendTo($selectDay3);
             $('<option>', { value: "שישי", text: "שישי " }).appendTo($selectDay1);
-            $('<option>', { value: "שישי", text: "שישי " }).appendTo($selectDay2);
-            $('<option>', { value: "שישי", text: "שישי " }).appendTo($selectDay3);
             $('<option>', { value: "שבת", text: "שבת " }).appendTo($selectDay1);
-            $('<option>', { value: "שבת", text: "שבת " }).appendTo($selectDay2);
-            $('<option>', { value: "שבת", text: "שבת " }).appendTo($selectDay3);
+
         }
 
         function generateDayAndHour() {
             var $selectDay1 = $("#day1");
-            var $selectDay2 = $("#day2");
-            var $selectDay3 = $("#day3");
-            var $selectHour1 = $("#hour1");
-            var $selectHour2 = $("#hour2");
-            var $selectHour3 = $("#hour3");
 
             $('<option>', { value: "", text: "בחר " }).appendTo($selectDay1);
-            $('<option>', { value: "", text: "בחר " }).appendTo($selectDay2);
-            $('<option>', { value: "", text: "בחר " }).appendTo($selectDay3);
-            $('<option>', { value: "", text: "בחר " }).appendTo($selectHour1);
-            $('<option>', { value: "", text: "בחר " }).appendTo($selectHour2);
-            $('<option>', { value: "", text: "בחר " }).appendTo($selectHour3);
-            $('<option>', { value: "בוקר", text: "בוקר " }).appendTo($selectHour1);
-            $('<option>', { value: "בוקר", text: "בוקר " }).appendTo($selectHour2);
-            $('<option>', { value: "בוקר", text: "בוקר " }).appendTo($selectHour3);
-            $('<option>', { value: "אחהצ", text: "אחהצ " }).appendTo($selectHour1);
-            $('<option>', { value: "אחהצ", text: "אחהצ " }).appendTo($selectHour2);
-            $('<option>', { value: "אחהצ", text: "אחהצ " }).appendTo($selectHour3);
             $('<option>', { value: "ראשון", text: "ראשון " }).appendTo($selectDay1);
-            $('<option>', { value: "ראשון", text: "ראשון " }).appendTo($selectDay2);
-            $('<option>', { value: "ראשון", text: "ראשון " }).appendTo($selectDay3);
             $('<option>', { value: "שני", text: "שני " }).appendTo($selectDay1);
-            $('<option>', { value: "שני", text: "שני " }).appendTo($selectDay2);
-            $('<option>', { value: "שני", text: "שני " }).appendTo($selectDay3);
             $('<option>', { value: "שלישי", text: "שלישי " }).appendTo($selectDay1);
-            $('<option>', { value: "שלישי", text: "שלישי " }).appendTo($selectDay2);
-            $('<option>', { value: "שלישי", text: "שלישי " }).appendTo($selectDay3);
             $('<option>', { value: "רביעי", text: "רביעי " }).appendTo($selectDay1);
-            $('<option>', { value: "רביעי", text: "רביעי " }).appendTo($selectDay2);
-            $('<option>', { value: "רביעי", text: "רביעי " }).appendTo($selectDay3);
             $('<option>', { value: "חמישי", text: "חמישי " }).appendTo($selectDay1);
-            $('<option>', { value: "חמישי", text: "חמישי " }).appendTo($selectDay2);
-            $('<option>', { value: "חמישי", text: "חמישי " }).appendTo($selectDay3);
             $('<option>', { value: "שישי", text: "שישי " }).appendTo($selectDay1);
-            $('<option>', { value: "שישי", text: "שישי " }).appendTo($selectDay2);
-            $('<option>', { value: "שישי", text: "שישי " }).appendTo($selectDay3);
             $('<option>', { value: "שבת", text: "שבת " }).appendTo($selectDay1);
-            $('<option>', { value: "שבת", text: "שבת " }).appendTo($selectDay2);
-            $('<option>', { value: "שבת", text: "שבת " }).appendTo($selectDay3);
         }
 
 
@@ -350,40 +331,40 @@
             //generatePaymentType();
 
 
-            if (JSON.parse(GENERAL.VOLUNTEERS.getVolunteersList()).length != 0) {
-                arr_customer = JSON.parse(GENERAL.VOLUNTEERS.getVolunteersList());
+            if (JSON.parse(GENERAL.RIDEPAT.getRidePatList()).length != 0) {
+                arr_customer = JSON.parse(GENERAL.RIDEPAT.getRidePatList());
                 if (arr_customer.func == "edit" || arr_customer.func == "show") {
                     uploadData(arr_customer.displayName);
 
                     if (arr_customer.func == "show") {
 
-                        $("#volunteerName").attr('disabled', 'disabled');
-                        $("#volunteerFirstName").attr('disabled', 'disabled');
-                        $("#volunteerLastName").attr('disabled', 'disabled');
-                        $("#phone1").attr('disabled', 'disabled');
-                        $("#email").attr('disabled', 'disabled');
-                        $("#typeVolunteer").attr('disabled', 'disabled');
+                        $("#ridePatName").attr('disabled', 'disabled');
+                        $("#pat").attr('disabled', 'disabled');
+                        $("#startPlace").attr('disabled', 'disabled');
+                        $("#quantity").attr('disabled', 'disabled');
+                        $("#coordinator").attr('disabled', 'disabled');
+                        $("#remark").attr('disabled', 'disabled');
                         $("#city").attr('disabled', 'disabled');
-                        $("#preferRoute1").attr('disabled', 'disabled');
+                        $("#escorted1").attr('disabled', 'disabled');
                         $("#gender").attr('disabled', 'disabled');
-                        $("#statusVolunteer").attr('disabled', 'disabled');
+                        $("#statusRidePat").attr('disabled', 'disabled');
                         $("#birthDate").attr('disabled', 'disabled');
                         $("#addAddress").attr('disabled', 'disabled');
                         $("#saveCustomer").attr('disabled', 'disabled');
-                        $("#phone2").attr('disabled', 'disabled');
-                        $("#HomePhone").attr('disabled', 'disabled');
-                        $("#PreferedDrivers3").attr('disabled', 'disabled');
-                        $("#preferedDrivers2").attr('disabled', 'disabled');
+                        $("#addition").attr('disabled', 'disabled');
+                        $("#rideType").attr('disabled', 'disabled');
+                        $("#escorted2").attr('disabled', 'disabled');
+                        $("#escorted3").attr('disabled', 'disabled');
                         $("#day1").attr('disabled', 'disabled');
                         $("#day2").attr('disabled', 'disabled');
                         $("#day3").attr('disabled', 'disabled');
                         $("#hour1").attr('disabled', 'disabled');
                         $("#hour2").attr('disabled', 'disabled');
                         $("#hour3").attr('disabled', 'disabled');
-                        $("#firstA").attr('disabled', 'disabled');
+                        $("#target").attr('disabled', 'disabled');
                         $("#lastA").attr('disabled', 'disabled');
-                        $("#joinDate").attr('disabled', 'disabled');
-                        $("#know").attr('disabled', 'disabled');
+                        $("#dateRide").attr('disabled', 'disabled');
+                        $("#hour").attr('disabled', 'disabled');
                         initializeSelect2();
                     }
                 }
@@ -393,59 +374,55 @@
                     generateStatus1();
                     generateGender1();
                     initializeSelect2();
-                    $("#activeVolunteer").prop('checked', 'checked');
+                    $("#activeridePat").prop('checked', 'checked');
                 }
             }
         }
 
         //function to fill form for edit
-        function uploadData(displayName) {
+        function uploadData(ridePatNum) {
             $.ajax({
                 dataType: "json",
-                url: "WebService.asmx/getVolunteer",
+                url: "WebService.asmx/getRidePat",
                 contentType: "application/json; charset=utf-8",
                 type: "POST",
-                data: JSON.stringify({ displayName: displayName }),
+                data: JSON.stringify({ ridePatNum: ridePatNum }),
                 success: function (data) {
-                    var volunteer = JSON.parse(data.d);
-                    GENERAL.VOLUNTEERS.setVolunteersList(volunteer);
-                    generatePreferDestination(volunteer);
-                    generatePreferDayAndHour(volunteer);
-                    generateStatus(volunteer);
-                    generateGender(volunteer);
-                    $("#volunteerName").val(volunteer.DisplayName);
-                    $("#volunteerFirstName").val(volunteer.FirstNameH);
-                    $("#volunteerLastName").val(volunteer.LastNameH);
-                    $("#firstA").val(volunteer.FirstNameA);
-                    $("#lastA").val(volunteer.LastNameA);
-                    $("#joinDate").val(volunteer.JoinDate);
-                    $("#know").val(volunteer.KnowArabic);
-                    $("#phone1").val(volunteer.CellPhone);
-                    $("#phone2").val(volunteer.CellPhone2);
-                    $("#HomePhone").val(volunteer.HomePhone);
-                    $("#email").val(volunteer.Email);
-                    $("#typeVolunteer").val(volunteer.TypeVol);
-                    $("#city").val(volunteer.City);
-                    $("#selectPreferRoute1").val(volunteer.PreferRoute1);
-                    $("#selectPreferedDrivers2").val(volunteer.PreferRoute2);
-                    $("#selectPreferedDrivers1").val(volunteer.PreferRoute3);
-                    $("#selectday1").val(volunteer.Day1);
-                    $("#selectday2").val(volunteer.Day2);
-                    $("#selsectday3").val(volunteer.Day3);
-                    $("#selecthour1").val(volunteer.Hour1);
-                    $("#selectHour2").val(volunteer.Hour2);
-                    $("#selecthour3").val(volunteer.Hour3);
-                    $("#selectstatusVolunteer").val(volunteer.Status);
-                    $("#selectgender").val(volunteer.Gender);
-                    $("#birthDate").val(volunteer.Birthdate);
+                    var ridePat = JSON.parse(data.d);
+                    GENERAL.RIDEPAT.setRidePatList(ridePat);
+                    generatePreferDestination(ridePat);
+                    generatePreferDayAndHour(ridePat);
+                    generateStatus(ridePat);
+                    generateGender(ridePat);
+
+                    $("#ridePatNum").val(ridePat.RidePatNum);
+                    $("#selectPat").val(ridePat.Pat.DisplayName);
+                    $("#selectStartPlace").val(ridePat.StartPlace.Name);
+                    $("#selectTarget").val(ridePat.Target.Name);
+                    $("#selectday1").val(ridePat.Day);
+                    $("#dateRide").val(ridePat.Date);
+                    $("#hour").val(ridePat.LeavingHour);
+                    $("#quantity").val(ridePat.Quantity);
+                    $("#addition").val(ridePat.Addition);
+                    $("#rideType").val(ridePat.RideType);
+                    $("#selectCoordinator").val(ridePat.Coordinator.DisplayName);
+                    $("#remark").val(ridePat.Remark);
+                    $("#selectstatusRidePat").val(ridePat.Status);
+                    $("#selectEscorted1").val(ridePat.Escorted1.DisplayName);
+                    $("#selectEscorted2").val(ridePat.Escorted2.DisplayName);
+                    $("#selectEscorted3").val(ridePat.Escorted3.DisplayName);
+                   // $("#selectday1").val(ridePat.Escorted3);
+                    $("#area").val(ridePat.StartArea);
+                    $("#selectstatusRidePat").val(ridePat.Status);
+
 
                 },
                 error: function (err) { alert("Error"); }
             });
         }
 
-        function returnVolunteers() {
-            location.href = "viewVolunteer.html"
+        function returnRidePat() {
+            location.href = "viewRidePat.html"
         }
 
 
@@ -610,22 +587,25 @@
                                             יצירת, צפייה ועריכת מתנדב. לחץ על כפתור חזור בכדי לצפות בכל הלקוחות.
                                         </p>
                                         <div class="text-right m-b-30 m-r-15">
-                                            <button type="button" onclick="returnVolunteers()" class="btn btn-default waves-effect w-md m-b-5"><i class="ti-back-right m-r-5"></i>חזור</button>
+                                            <button type="button" onclick="returnRidePat()" class="btn btn-default waves-effect w-md m-b-5"><i class="ti-back-right m-r-5"></i>חזור</button>
                                         </div>
                                         <div class="row m-l-10 m-r-10">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    <label class="col-sm-3 control-label">שם מלא מתנדב</label>
+                                                    <label class="col-sm-3 control-label">מספר הסעה</label>
                                                     <div class="col-sm-6">
-                                                        <input id="volunteerName" name="volunteerName" type="text" class="form-control">
+                                                        <input id="ridePatNum" name="ridePatNum" type="text" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    <label class="col-sm-3 control-label">שם פרטי</label>
-                                                    <div class="col-sm-6">
-                                                        <input id="volunteerFirstName" name="volunteerFirstName" type="text" class="form-control">
+                                                    <label class="col-sm-3 control-label">חולה</label>
+                                                    <!--<div class="col-sm-6">
+                                                        <input id="patient" name="patient" type="text" class="form-control">
+                                                    </div>-->  
+                                                    <div class="col-sm-6" id="selectPat">
+                                                        <select id="pat" name="pat" class="form-control"></select>
                                                     </div>
                                                 </div>
                                             </div>
@@ -634,16 +614,19 @@
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">שם משפחה</label>
-                                                    <div class="col-sm-6">
-                                                        <input id="volunteerLastName" name="volunteerLastName" type="text" class="form-control">
+                                                    <!--<!--<div class="col-sm-6">
+                                                        <input id="startPlace" name="startPlace" type="text" class="form-control">
+                                                    </div>-->-->
+                                                    <div class="col-sm-6" id="selectStartPlace">
+                                                        <select id="startPlace" name="startPlace" class="form-control"></select>
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    <label class="col-sm-3 control-label">טלפון 1</label>
+                                                    <label class="col-sm-3 control-label">כמות נוסעים</label>
                                                     <div class="col-sm-6">
-                                                        <input id="phone1" name="phone1" type="text" class="form-control">
+                                                        <input id="quantity" name="quantity" type="text" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
@@ -652,52 +635,37 @@
                                             <div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">שם פרטי ערבית</label>
-                                                    <div class="col-sm-6">
-                                                        <input id="firstA" name="firstA" type="text" class="form-control">
+                                                    <!--<div class="col-sm-6">
+                                                        <input id="target" name="target" type="text" class="form-control">
+                                                    </div>-->
+                                                    <div class="col-sm-6" id="selectTarget">
+                                                        <select id="target" name="target" class="form-control"></select>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-sm-6">
+                                            <!--<div class="col-sm-6">
                                                 <div class="form-group">
                                                     <label class="col-sm-3 control-label">שם משפחה ערבית</label>
                                                     <div class="col-sm-6">
                                                         <input id="lastA" name="lastA" type="text" class="form-control">
                                                     </div>
                                                 </div>
-                                            </div>
+                                            </div>-->
                                         </div>
                                         <div class="row m-l-10 m-r-10">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    <label class="col-sm-3 control-label">טלפון 2</label>
+                                                    <label class="col-sm-3 control-label">כלי עזר</label>
                                                     <div class="col-sm-6">
-                                                        <input id="phone2" name="phone2" type="text" class="form-control">
+                                                        <input id="addition" name="addition" type="text" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    <label class="col-sm-3 control-label">טלפון בית</label>
+                                                    <label class="col-sm-3 control-label">סוג הסעה</label>
                                                     <div class="col-sm-6">
-                                                        <input id="HomePhone" name="HomePhone" type="text" class="form-control">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row m-l-10 m-r-10">
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label class="col-sm-3 control-label">תאריך הצטרפות </label>
-                                                    <div class="col-sm-6">
-                                                        <input id="joinDate" name="joinDate" type="text" class="form-control">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-sm-6">
-                                                <div class="form-group">
-                                                    <label class="col-sm-3 control-label">האם יודע ערבית?</label>
-                                                    <div class="col-sm-6">
-                                                        <input id="know" name="know" type="text" class="form-control">
+                                                        <input id="rideType" name="rideType" type="text" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
@@ -705,84 +673,106 @@
                                         <div class="row m-l-10 m-r-10">
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    <label class="col-sm-3 control-label">Email</label>
+                                                    <label class="col-sm-3 control-label">תאריך הסעה </label>
                                                     <div class="col-sm-6">
-                                                        <input id="email" name="email" type="text" class="form-control">
+                                                        <input id="dateRide" name="dateRide" type="text" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
                                             <div class="col-sm-6">
                                                 <div class="form-group">
-                                                    <label class="col-sm-3 control-label">סוג מתנדב</label>
+                                                    <label class="col-sm-3 control-label">שעת הסעה</label>
                                                     <div class="col-sm-6">
-                                                        <input id="typeVolunteer" name="typeVolunteer" type="text" class="form-control">
+                                                        <input id="hour" name="hour" type="text" class="form-control">
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-sm-6">
+                                        <div class="row m-l-10 m-r-10">
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">רכז</label>
+                                                    <!--<div class="col-sm-6">
+                                                        <input id="coordinator" name="coordinator" type="text" class="form-control">
+                                                    </div>-->
+                                                    <div class="col-sm-6" id="selectCoordinator">
+                                                        <select id="coordinator" name="coordinator" class="form-control"></select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-sm-6">
+                                                <div class="form-group">
+                                                    <label class="col-sm-3 control-label">הערות</label>
+                                                    <div class="col-sm-6">
+                                                        <input id="remark" name="remark" type="text" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!--<div class="col-sm-6">
                                             <div class="form-group">
-                                                <!--<label class="col-sm-3 control-label">מין</label>
+                                                <label class="col-sm-3 control-label">מין</label>
                                                 <div class="col-sm-6">
                                                     <input id="gender" name="gender" type="text" class="form-control">
-                                                </div>-->
+                                                </div>
                                                 <label class="col-sm-3 control-label">מין</label>
                                                 <div class="col-sm-6" id="selectgender">
                                                     <select id="gender" name="gender" class="form-control"></select>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>-->
                                     </div>
                                     <div class="row m-l-10 m-r-10">
-                                        <div class="col-sm-6">
+                                        <!--<div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">עיר</label>
                                                 <div class="col-sm-6">
                                                     <input id="city" name="city" type="text" class="form-control">
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>-->
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label">יעד מועדף 1</label>
-                                                <div class="col-sm-6" id="selectPreferRoute1">
-                                                    <select id="preferRoute1" name="preferRoute1" class="form-control"></select>
+                                                <label class="col-sm-3 control-label">מלווה 1</label>
+                                                <div class="col-sm-6" id="selectEscorted1">
+                                                    <select id="escorted1" name="escorted1" class="form-control"></select>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row m-l-10 m-r-10">
-                                        <div class="col-sm-6">
+                                    <!--<div class="row m-l-10 m-r-10">
+                                        <!--<div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">תאריך לידה </label>
                                                 <div class="col-sm-6">
                                                     <input id="birthDate" name="birthDate" type="text" class="form-control">
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-sm-6">
+                                        </div>-->
+                                        <!--<div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">הערות</label>
                                                 <div class="col-sm-6">
                                                     <input id="remarks" name="remarks" type="text" class="form-control">
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
+                                        </div>-->
+                                    </div>-->
                                     <div class="row m-l-10 m-r-10">
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label">יעד מועדף 3</label>
+                                                <label class="col-sm-3 control-label">מלווה 2</label>
                                                 <div class="col-sm-6" id="selectPreferedDrivers1">
-                                                    <select id="PreferedDrivers3" name="PreferedDrivers3" class="form-control"></select>
+                                                    <select id="escorted2" name="escorted2" class="form-control"></select>
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- להמשיך לעדכן את המלווים ואת העיצוב!!!!!!!!! -->
                                         <div class="col-sm-6">
                                             <div class="form-group">
-                                                <label class="col-sm-3 control-label">יעד מועדף 2</label>
-                                                <div class="col-sm-6" id="selectPreferedDrivers2">
-                                                    <select id="preferedDrivers2" name="preferedDrivers2" class="form-control"></select>
+                                                <label class="col-sm-3 control-label">מלווה 3</label>
+                                                <div class="col-sm-6" id="selectEscorted2">
+                                                    <select id="escorted3" name="escorted3" class="form-control"></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -799,7 +789,7 @@
                                         <div class="col-sm-6">
                                             <div class="form-group">
                                                 <label class="col-sm-3 control-label">יום 2</label>
-                                                <div class="col-sm-6" id="selectday2">
+                                                <div class="col-sm-6" id="area">
                                                     <select id="day2" name="day2" class="form-control"></select>
                                                 </div>
                                             </div>
@@ -848,11 +838,11 @@
                                             <div class="form-group">
                                                 <!--<label class="col-sm-3 control-label">סטטוס</label>
                                                 <div class="col-sm-6">
-                                                    <textarea id="statusVolunteer" name="statusVolunteer" class="form-control" rows="3"></textarea>
+                                                    <textarea id="statusRidePat" name="statusRidePat" class="form-control" rows="3"></textarea>
                                                 </div>-->
                                                 <label class="col-sm-3 control-label">סטטוס</label>
-                                                <div class="col-sm-6" id="selectstatusVolunteer">
-                                                    <select id="statusVolunteer" name="statusVolunteer" class="form-control"></select>
+                                                <div class="col-sm-6" id="selectstatusRidePat">
+                                                    <select id="statusRidePat" name="statusRidePat" class="form-control"></select>
                                                 </div>
                                             </div>
                                         </div>
@@ -861,22 +851,22 @@
                                         <div class="col-sm-6">
                                             <br />
                                             <div class="col-md-6 checkbox checkbox-primary text-left">
-                                                <<!--input id="activeVolunteer" type="checkbox" disabled>
-                                                <label for="activeVolunteer">
+                                                <<!--input id="activeridePat" type="checkbox" disabled>
+                                                <label for="activeridePat">
                                                     מתנדב פעיל
                                                 </label>-->
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div id="addressesForm">
+                                <!--<div id="addressesForm">
                                     <hr />
                                     <table id="jqGrid" class="table table-striped table-bordered text-right"></table>
                                     <div id="jqGridPager"></div>
                                     <div class="text-right m-t-30 row">
                                         <button type="submit" id="saveCustomer" class="btn btn-success waves-effect w-md waves-light m-b-5  m-r-15"><i class="ti-save m-r-5"></i>שמור</button>
                                     </div>
-                                </div>
+                                </div>-->
                             </div>
                         </form>
                     </div>
@@ -917,23 +907,23 @@
 
                 // Rules for form validation
                 rules: {
-                    volunteerName: {
+                    ridePatName: {
                         required: true
                     },
-                    volunteerFirstName: {
+                    pat: {
                         required: true
                     },
-                    volunteerLastName: {
+                    startPlace: {
                         required: true
                     },
-                    phone1: {
+                    quantity: {
                         required: true
                     },
-                    email: {
+                    coordinator: {
                         required: true,
-                        email: true
+                        coordinator: true
                     },
-                    typeVolunteer: {
+                    remark: {
                         required: true
                     }
                 },
@@ -941,47 +931,47 @@
                 submitHandler: function (form, event) {
                     event.preventDefault();
                     debugger;
-                    var displayName = $("#volunteerName").val();
-                    var firstNameH = $("#volunteerFirstName").val();
-                    var lastNameH = $("#volunteerLastName").val();
-                    var cellPhone = $("#phone1").val();
-                    var email = $("#email").val();
-                    var typeVol = $("#typeVolunteer").val();
+                    var displayName = $("#ridePatName").val();
+                    var firstNameH = $("#pat").val();
+                    var lastNameH = $("#startPlace").val();
+                    var cellPhone = $("#quantity").val();
+                    var coordinator = $("#coordinator").val();
+                    var typeVol = $("#remark").val();
                     var city = $("#city").val();
-                    var preferRoute1 = $("#preferRoute1").val();
-                    var status = $("#statusVolunteer").val();
+                    var escorted1 = $("#escorted1").val();
+                    var status = $("#statusRidePat").val();
                     var gender = $("#gender").val();
                     var birthDate = $("#birthDate").val();
-                    var cellphone2 = $("#phone2").val();
-                    var homePhone = $("#HomePhone").val();
-                    var preferRoute3 = $("#PreferedDrivers3").val();
-                    var preferRoute2 = $("#preferedDrivers2").val();
+                    var celladdition = $("#addition").val();
+                    var rideType = $("#rideType").val();
+                    var preferRoute3 = $("#escorted2").val();
+                    var preferRoute2 = $("#escorted3").val();
                     var day1 = $("#day1").val();
                     var day2 = $("#day2").val();
                     var day3 = $("#day3").val();
                     var hour1 = $("#hour1").val();
                     var hour2 = $("#hour2").val();
                     var hour3 = $("#hour3").val();
-                    var nameA = $("#firstA").val();
+                    var nameA = $("#target").val();
                     var lastNameA = $("#lastA").val();
-                    var joinDate = $("#joinDate").val();
-                    var KnowArabic = $("#know").val();
+                    var dateRide = $("#dateRide").val();
+                    var hourArabic = $("#hour").val();
                     var street = "";
                     var func = arr_customer.func;
 
-                    if (cellphone2 == "") { cellphone2 = "0"; }
-                    volunteer = {
-                        displayName: displayName, firstNameH: firstNameH, firstNameA: nameA, lastNameH: lastNameH, lastNameA: lastNameA, cellPhone: cellPhone, cellphone2: cellphone2, homePhone: homePhone,
-                        city: city, address: street, email: email, birthdate: birthDate, joinDate: joinDate, status: status, gender: gender, knowArabic: KnowArabic,
-                        preferRoute1: preferRoute1, preferRoute2: preferRoute2, preferRoute3: preferRoute3, day1: day1, day2: day2, day3: day3, hour1: hour1, hour2: hour2, hour3: hour3, typeVol: typeVol
+                    if (celladdition == "") { celladdition = "0"; }
+                    ridePat = {
+                        displayName: displayName, firstNameH: firstNameH, firstNameA: nameA, lastNameH: lastNameH, lastNameA: lastNameA, cellPhone: cellPhone, celladdition: celladdition, rideType: rideType,
+                        city: city, address: street, coordinator: coordinator, birthdate: birthDate, dateRide: dateRide, status: status, gender: gender, hourArabic: hourArabic,
+                        escorted1: escorted1, preferRoute2: preferRoute2, preferRoute3: preferRoute3, day1: day1, day2: day2, day3: day3, hour1: hour1, hour2: hour2, hour3: hour3, typeVol: typeVol
                     }
                     $.ajax({
                         dataType: "json",
-                        url: "WebService.asmx/setVolunteer",
+                        url: "WebService.asmx/setridePat",
                         contentType: "application/json; charset=utf-8",
                         type: "POST",
                         async: false,
-                        data: JSON.stringify({ volunteer: volunteer, func: func }),
+                        data: JSON.stringify({ ridePat: ridePat, func: func }),
                         success: function (data) {
                             //SaveAddresses(0, numberOfRecords, customerID);
 
@@ -991,7 +981,7 @@
                                 timer: 1000,
                                 showConfirmButton: false
                             });
-                            setTimeout(function () { returnVolunteers() }, 1001);
+                            setTimeout(function () { returnRidePat() }, 1001);
 
                         },
                         error: function (err) {
@@ -1043,20 +1033,20 @@
 
                 // Messages for form validation
                 messages: {
-                    volunteerName: {
+                    ridePatName: {
                         required: "אנא הכנס שם תצוגה מתנדב"
                     },
-                    volunteerFirstName: {
+                    pat: {
                         required: "אנא הכנס שם פרטי"
                     },
-                    phone1: {
+                    quantity: {
                         required: "אנא הכנס טלפון"
                     },
-                    phone2: {
+                    addition: {
                     },
-                    email: {
-                        required: "אנא הכנס כתובת Email ",
-                        email: "אנא הכנס כתובת תקינה"
+                    coordinator: {
+                        required: "אנא הכנס כתובת coordinator ",
+                        coordinator: "אנא הכנס כתובת תקינה"
                     },
                     //accountID: {
                     //    required: "אנא הכנס מספר חשבון"
